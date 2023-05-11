@@ -29,11 +29,11 @@ class PersistentDrawer extends StatelessWidget {
               // onTap: (() => DebugOut.printLog("Profile Clicked")),
               onTap: (() => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Home()))),
-              child: Padding(
-                padding: const EdgeInsets.all(0),
+              child: const Padding(
+                padding: EdgeInsets.all(0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
+                  children: [
                     Flexible(
                         child: CircleAvatar(
                       maxRadius: 50,

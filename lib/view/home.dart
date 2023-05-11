@@ -5,7 +5,7 @@ import 'package:speedlist/model/categories.dart';
 import 'package:speedlist/view/widgets/drawer.dart';
 import 'package:speedlist/view/widgets/view_category.dart';
 
-import '../debug/debug_out.dart';
+import '../debug/print.dart';
 
 PocketBase pb = PocketBase("http://192.168.0.104:8090");
 
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
             );
           }
           if (snapshot.hasError) {
-            DebugOut.printLog('Error ${snapshot.error}');
+            Debug.printLog('Error ${snapshot.error}');
           }
           final categories = snapshot.data ?? [];
           if (categories.isEmpty) {

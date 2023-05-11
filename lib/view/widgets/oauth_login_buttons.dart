@@ -1,7 +1,7 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 
-import '../../debug/debug_out.dart';
+import '../../debug/print.dart';
 
 //oAuthWidget needs to be added.
 class OAuthButton extends StatelessWidget {
@@ -17,7 +17,7 @@ class OAuthButton extends StatelessWidget {
         child: BlurryContainer.square(
             blur: 5,
             child: GestureDetector(
-                onTap: () => DebugOut.printLog("Google Login"),
+                onTap: () => Debug.printLog("Google Login"),
                 child: Image.asset(iconAsset))));
   }
 }
