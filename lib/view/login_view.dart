@@ -2,8 +2,10 @@ import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:speedlist/Backend/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
-import 'package:speedlist/debug/debug_out.dart';
+import 'package:speedlist/debug/print.dart';
+import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/widgets/oauth_login_buttons.dart';
 
 import 'home.dart';
@@ -35,6 +37,24 @@ class LoginPageInput extends StatefulWidget {
 }
 
 class _LoginPageInputState extends State<LoginPageInput> {
+  bool _loginEmpty = false;
+  bool _passEmpty = false;
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passController.dispose();
+  }
+
+  //perhaps this should be a bool? We could also split it into two differrent methods to keep up with S.O.L.I.D principles.
+  void _checkInput() {
+    setState(() {
+      _loginEmpty = _emailController.text.isEmpty;
+      _passEmpty = _passController.text.isEmpty;
+      return;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,42 +81,92 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     TextField(
                       controller: _emailController,
                       style: GoogleFonts.montserrat(color: Colors.white),
-                      decoration: const InputDecoration(
-                        hintStyle: TextStyle(fontSize: 17, color: Colors.white),
+                      decoration: InputDecoration(
+                        hintStyle:
+                            const TextStyle(fontSize: 17, color: Colors.white),
                         hintText: "Insert your email",
-                        suffixIcon: Icon(
+                        errorBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red)),
+                        errorText: _loginEmpty ? "Login cannot be empty" : null,
+                        suffixIcon: const Icon(
                           Icons.email_outlined,
                           color: Colors.white,
                         ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
+                        contentPadding: const EdgeInsets.all(20),
                       ),
+                      //onChanged: (_) => _checkInput(),
                     ),
                     TextField(
                       controller: _passController,
                       style: GoogleFonts.montserrat(color: Colors.white),
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        hintStyle: TextStyle(fontSize: 17, color: Colors.white),
+                      decoration: InputDecoration(
+                        hintStyle:
+                            const TextStyle(fontSize: 17, color: Colors.white),
                         hintText: "Insert your password",
-                        suffixIcon:
-                            Icon(Icons.lock_open_outlined, color: Colors.white),
+                        errorBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red)),
+                        errorText:
+                            _passEmpty ? "Password cannot be empty" : null,
+                        suffixIcon: const Icon(Icons.lock_open_outlined,
+                            color: Colors.white),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
+                        contentPadding: const EdgeInsets.all(20),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        // bool isLoginSuccesful =
-                        //     await UserController.attemptLogin(pb,
-                        //         _emailController.text, _passController.text);
-                        // if (!isLoginSuccesful) {
-                        //   const LoginDialogue(
-                        //     message:
-                        //         'Login failed, check your email or password',
-                        //   );
-                        // }
-                        // DebugOut.printLog(isLoginSuccesful.toString());
+                        _checkInput();
+                        await BackendUtilities.checkBackendHealth()
+                            .then((isConnected) {
+                          if (!isConnected) {
+                            return showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return BlurryContainer.square(
+                                    child: AlertDialog(
+                                      backgroundColor: Colors.white,
+                                      title: const Center(
+                                          child: Text("Attention")),
+                                      content: const Text(
+                                          "Connection to server could not be established. Try again later."),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Ok."))
+                                      ],
+                                    ),
+                                  );
+                                });
+                          }
+                        });
+                        UserModel user = await UserController.authUser(
+                            pb, _emailController.text, _passController.text);
+                        if (!user.isVerified && mounted) {
+                          await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BlurryContainer.square(
+                                  child: AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    title:
+                                        const Center(child: Text("Attention")),
+                                    content: const Text(
+                                        "The user is not yet verified. Check your email."),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("Ok."))
+                                    ],
+                                  ),
+                                );
+                              });
+                        }
                       },
                       style: ButtonStyle(
                         shape: MaterialStatePropertyAll(
@@ -109,11 +179,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ),
                     TextButton(
                       onPressed: () {
-                        DebugOut.printLog("Clicked register");
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: ((context) => const RegisterPage())));
+                        Debug.printLog("Clicked register");
                       },
                       child: const Text.rich(
                         TextSpan(
@@ -136,11 +202,11 @@ class _LoginPageInputState extends State<LoginPageInput> {
             ),
           ),
           const SizedBox(height: 10),
-          Center(
+          const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 OAuthButton(iconAsset: "assets/icons/facebook.png"),
                 SizedBox(
                   width: 10,
@@ -169,26 +235,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
           )
         ],
       ),
-    );
-  }
-}
-
-class LoginDialogue extends StatelessWidget {
-  final String message;
-  const LoginDialogue({required this.message, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(message),
-      actions: <Widget>[
-        TextButton(
-          child: const Text("OK"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
     );
   }
 }
