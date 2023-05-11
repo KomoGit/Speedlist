@@ -33,6 +33,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^4.0.3
+  http: ^0.13.6
   pocketbase: ^0.8.0
 
 dev_dependencies:
