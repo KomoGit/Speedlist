@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:speedlist/view/login_view.dart';
+import 'package:speedlist/view/Login/login_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
