@@ -1,7 +1,7 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 
-import '../../debug/print.dart';
+import '../../../debug/print.dart';
 
 //oAuthWidget needs to be added.
 class OAuthButton extends StatelessWidget {
