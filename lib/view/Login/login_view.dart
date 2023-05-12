@@ -2,7 +2,7 @@ import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pocketbase/pocketbase.dart';
-import 'package:speedlist/Backend/backend_utilities.dart';
+import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
@@ -195,7 +195,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                 color: Colors.white,
                 decoration: TextDecoration.underline,
               ),
-            ), //TODO: TEMPORARY MEASURE. REMOVE THIS IN PROD.
+            ),
             onPressed: () => {
               Navigator.push(
                   context,
