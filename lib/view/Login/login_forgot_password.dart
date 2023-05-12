@@ -1,9 +1,17 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:speedlist/debug/print.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:speedlist/Utilities/login_utilities.dart';
+import 'package:speedlist/controller/user_controller.dart';
 
+import '../../Utilities/backend_utilities.dart';
+
+LoginUtilities loginUtilities = LoginUtilities();
+PocketBase pb = PocketBase("http://192.168.0.104:8090");
 late TextEditingController _emailController;
+bool isCredentialEmpty = true;
+late bool isEmailValid; // = loginUtilities.emailValidator();
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -32,6 +40,7 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
   void initState() {
     super.initState();
     _emailController = TextEditingController();
+    isEmailValid = loginUtilities.emailValidator(_emailController.text);
   }
 
   @override
@@ -40,8 +49,15 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
     _emailController.dispose();
   }
 
+  void checkInput() {
+    setState(() {
+      isCredentialEmpty = _emailController.text.isEmpty;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    isEmailValid = loginUtilities.emailValidator(_emailController.text);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -60,13 +76,16 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Padding(padding: EdgeInsets.all(10)),
+                        const Padding(
+                          padding: EdgeInsets.all(10),
+                        ),
                         IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            )),
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                     Text(
@@ -82,10 +101,13 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                             const TextStyle(fontSize: 17, color: Colors.white),
                         hintText: "Insert your email",
                         errorBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red)),
-                        errorText: _emailController.text.isEmpty
-                            ? "Please insert your email you used to register"
-                            : null,
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        errorText: isCredentialEmpty
+                            ? "Please insert your email used in registration"
+                            : !isEmailValid
+                                ? "Email you have entered is invalid"
+                                : null,
                         suffixIcon: const Icon(
                           Icons.email_outlined,
                           color: Colors.white,
@@ -96,7 +118,20 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        Debug.printLog("Clicked on reset password");
+                        checkInput();
+                        if (!isCredentialEmpty && isEmailValid) {
+                          await BackendUtilities.checkBackendHealth().then(
+                            (isConnected) {
+                              if (!isConnected) {
+                                loginFailAlert(context,
+                                    "Connection to server could not be established. Try again later.");
+                              } else {
+                                UserController.requestUserPasswordReset(
+                                    pb, _emailController.text);
+                              }
+                            },
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         shape: MaterialStatePropertyAll(
@@ -116,4 +151,26 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
       ),
     );
   }
+
+  Future<dynamic> loginFailAlert(BuildContext context, String msg) =>
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return BlurryContainer.square(
+            child: AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(child: Text("Attention")),
+              content: Text(msg),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Ok."),
+                )
+              ],
+            ),
+          );
+        },
+      );
 }
