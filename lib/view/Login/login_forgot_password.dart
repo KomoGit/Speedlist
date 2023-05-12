@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/debug/print.dart';
 
-final TextEditingController _emailController = TextEditingController();
+late TextEditingController _emailController;
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -28,6 +28,12 @@ class ForgotPasswordInput extends StatefulWidget {
 }
 
 class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -56,8 +62,7 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                       children: [
                         const Padding(padding: EdgeInsets.all(10)),
                         IconButton(
-                            onPressed: () => Navigator.pop(
-                                context), //Navigator.push(context, MaterialPageRoute(builder: (context) = > const LoginPage())),
+                            onPressed: () => Navigator.pop(context),
                             icon: const Icon(
                               Icons.arrow_back,
                               color: Colors.white,
@@ -90,7 +95,7 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         Debug.printLog("Clicked on reset password");
                       },
                       style: ButtonStyle(
