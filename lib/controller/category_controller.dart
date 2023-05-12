@@ -1,6 +1,6 @@
 import 'package:pocketbase/pocketbase.dart';
 
-import '../../model/categories.dart';
+import '../model/categories.dart';
 
 //Pocketbase Credentials - #PASS - D969X5NU2y3sNy5
 //#LOGIN - example@example.com
