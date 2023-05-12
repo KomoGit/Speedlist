@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pocketbase/pocketbase.dart';
-import 'package:speedlist/view/widgets/category_controller.dart';
+import 'package:speedlist/controller/category_controller.dart';
 import 'package:speedlist/model/categories.dart';
 import 'package:speedlist/view/widgets/drawer.dart';
 import 'package:speedlist/view/widgets/view_category.dart';
