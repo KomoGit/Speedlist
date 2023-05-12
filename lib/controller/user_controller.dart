@@ -10,4 +10,10 @@ class UserController {
         .timeout(const Duration(seconds: 10));
     return UserModel.fromModel(authData.record!);
   }
+
+  //We might require a bool to return incase something goes wrong?
+  static Future<void> requestUserPasswordReset(
+      PocketBase pb, String email) async {
+    await pb.admins.requestPasswordReset(email);
+  }
 }
