@@ -9,9 +9,10 @@ import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/widgets/Login%20Widgets/oauth_login_buttons.dart';
 
-//import '../home.dart';
+import '../../Utilities/login_utilities.dart';
 
 PocketBase pb = PocketBase("http://192.168.0.104:8090");
+LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
 
@@ -38,8 +39,9 @@ class LoginPageInput extends StatefulWidget {
 }
 
 class _LoginPageInputState extends State<LoginPageInput> {
-  bool isLoginEmpty = false;
+  bool isEmailEmpty = false;
   bool isPassEmpty = false;
+  bool isEmailValid = false;
 
   @override
   void dispose() {
@@ -51,7 +53,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
   //perhaps this should be a bool? We could also split it into two differrent methods to keep up with S.O.L.I.D principles.
   void _checkInput() {
     setState(() {
-      isLoginEmpty = _emailController.text.isEmpty;
+      isEmailEmpty = _emailController.text.isEmpty;
       isPassEmpty = _passController.text.isEmpty;
       return;
     });
@@ -59,6 +61,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
 
   @override
   Widget build(BuildContext context) {
+    isEmailValid = loginUtilities.emailValidator(_emailController.text);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -89,8 +92,11 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         hintText: "Insert your email",
                         errorBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.red)),
-                        errorText:
-                            isLoginEmpty ? "Login cannot be empty" : null,
+                        errorText: isEmailEmpty
+                            ? "Login cannot be empty"
+                            : !isEmailValid
+                                ? "Email you have entered is invalid"
+                                : null,
                         suffixIcon: const Icon(
                           Icons.email_outlined,
                           color: Colors.white,
@@ -120,7 +126,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ElevatedButton(
                       onPressed: () async {
                         _checkInput();
-                        if (!isLoginEmpty && !isPassEmpty) {
+                        if (!isEmailEmpty && !isPassEmpty && isEmailValid) {
                           await BackendUtilities.checkBackendHealth()
                               .then((isConnected) {
                             if (!isConnected) {
