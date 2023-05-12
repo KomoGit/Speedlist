@@ -16,4 +16,16 @@ class UserController {
       PocketBase pb, String email) async {
     await pb.admins.requestPasswordReset(email);
   }
+
+  static Future<void> createNewUser(PocketBase pb, UserModel user) async {
+    final body = <String, dynamic>{
+      "username": user.username,
+      "email": user.email,
+      "emailVisibility": false,
+      "password": user.password,
+      "passwordConfirm": "12345678"
+    };
+    await pb.collection('users').create(body: body);
+    //await pb.collection('users').requestVerification(user.email); Haven't configured that yet so.
+  }
 }
