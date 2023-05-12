@@ -41,7 +41,7 @@ class LoginPageInput extends StatefulWidget {
 class _LoginPageInputState extends State<LoginPageInput> {
   bool isEmailEmpty = false;
   bool isPassEmpty = false;
-  bool isEmailValid = false;
+  bool isEmailValid = true;
 
   @override
   void dispose() {
@@ -55,13 +55,13 @@ class _LoginPageInputState extends State<LoginPageInput> {
     setState(() {
       isEmailEmpty = _emailController.text.isEmpty;
       isPassEmpty = _passController.text.isEmpty;
+      isEmailValid = loginUtilities.emailValidator(_emailController.text);
       return;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    isEmailValid = loginUtilities.emailValidator(_emailController.text);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -91,7 +91,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             const TextStyle(fontSize: 17, color: Colors.white),
                         hintText: "Insert your email",
                         errorBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red)),
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
                         errorText: isEmailEmpty
                             ? "Login cannot be empty"
                             : !isEmailValid
@@ -114,7 +115,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             const TextStyle(fontSize: 17, color: Colors.white),
                         hintText: "Insert your password",
                         errorBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red)),
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
                         errorText:
                             isPassEmpty ? "Password cannot be empty" : null,
                         suffixIcon: const Icon(Icons.lock_open_outlined,
@@ -216,21 +218,22 @@ class _LoginPageInputState extends State<LoginPageInput> {
 
   Future<dynamic> loginFailAlert(BuildContext context, String msg) =>
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return BlurryContainer.square(
-              child: AlertDialog(
-                backgroundColor: Colors.white,
-                title: const Center(child: Text("Attention")),
-                content: Text(msg),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Ok."))
-                ],
-              ),
-            );
-          });
+        context: context,
+        builder: (BuildContext context) {
+          return BlurryContainer.square(
+            child: AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(child: Text("Attention")),
+              content: Text(msg),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Ok."))
+              ],
+            ),
+          );
+        },
+      );
 }
