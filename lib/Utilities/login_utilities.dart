@@ -5,9 +5,17 @@ class LoginUtilities {
         .hasMatch(email);
   }
 
-  static bool passwordValidator(String pass) {
+  bool passwordValidator(String pass) {
     return RegExp(
             r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
         .hasMatch(pass);
+  }
+
+  // Validates if password and confrim password are one and the same.
+  bool arePasswordsSame(String pass1, String pass2) {
+    if (pass1 == pass2) {
+      return true;
+    }
+    return false;
   }
 }
