@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
-import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
+import 'package:speedlist/view/register_view.dart';
 import 'package:speedlist/view/widgets/Login%20Widgets/oauth_login_buttons.dart';
 
 import '../../Utilities/login_utilities.dart';
@@ -50,7 +50,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
     _passController.dispose();
   }
 
-  //perhaps this should be a bool? We could also split it into two differrent methods to keep up with S.O.L.I.D principles.
   void _checkInput() {
     setState(() {
       isEmailEmpty = _emailController.text.isEmpty;
@@ -94,7 +93,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           borderSide: BorderSide(color: Colors.red),
                         ),
                         errorText: isEmailEmpty
-                            ? "Login cannot be empty"
+                            ? "Email cannot be empty"
                             : !isEmailValid
                                 ? "Email you have entered is invalid"
                                 : null,
@@ -155,7 +154,10 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Debug.printLog("Clicked register");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Register()));
                       },
                       child: const Text.rich(
                         TextSpan(
@@ -216,6 +218,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
     );
   }
 
+  //Find a way to ensure we can make this into a reusable widget.
   Future<dynamic> loginFailAlert(BuildContext context, String msg) =>
       showDialog(
         context: context,
