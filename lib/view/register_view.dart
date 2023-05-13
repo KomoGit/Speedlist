@@ -2,6 +2,8 @@ import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:speedlist/controller/user_controller.dart';
+import 'package:speedlist/model/user.dart';
 
 import '../Utilities/backend_utilities.dart';
 import '../Utilities/login_utilities.dart';
@@ -44,7 +46,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
   bool isConfirmPassEmpty = false;
   bool isPasswordValid = true;
   bool isEmailValid = true;
-  late bool isPasswordSame;
+  bool isPasswordSame = true;
 
   @override
   void dispose() {
@@ -57,14 +59,30 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
 
   void _checkInput() {
     setState(() {
+      isUsernameEmpty = _usernameController.text.isEmpty;
       isEmailEmpty = _emailController.text.isEmpty;
       isPasswordEmpty = _passController[0].text.isEmpty;
       isConfirmPassEmpty = _passController[1].text.isEmpty;
       isPasswordValid =
           loginUtilities.passwordValidator(_passController[0].text);
+      isPasswordSame = loginUtilities.arePasswordsSame(
+          _passController[0].text, _passController[1].text);
       isEmailValid = loginUtilities.emailValidator(_emailController.text);
       return;
     });
+  }
+
+  bool validateInputs() {
+    if (!isUsernameEmpty &&
+        !isEmailEmpty &&
+        !isPasswordEmpty &&
+        !isConfirmPassEmpty &&
+        !isUsernameEmpty &&
+        isEmailValid &&
+        isPasswordValid) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -90,6 +108,27 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                       style: GoogleFonts.bebasNeue(
                           color: Colors.white, fontSize: 24, letterSpacing: 2),
                     ),
+                    const Padding(padding: EdgeInsets.only(bottom: 50)),
+                    TextField(
+                      controller: _usernameController,
+                      style: GoogleFonts.montserrat(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintStyle:
+                            const TextStyle(fontSize: 17, color: Colors.white),
+                        hintText: "Insert your user username",
+                        errorBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        errorText:
+                            isUsernameEmpty ? "Username cannot be empty" : null,
+                        suffixIcon: const Icon(
+                          Icons.person_2_outlined,
+                          color: Colors.white,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(20),
+                      ),
+                    ),
                     TextField(
                       controller: _emailController,
                       style: GoogleFonts.montserrat(color: Colors.white),
@@ -101,7 +140,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                           borderSide: BorderSide(color: Colors.red),
                         ),
                         errorText: isEmailEmpty
-                            ? "Login cannot be empty"
+                            ? "Email cannot be empty"
                             : !isEmailValid
                                 ? "Email you have entered is invalid"
                                 : null,
@@ -124,8 +163,11 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText:
-                            isPasswordEmpty ? "Password cannot be empty" : null,
+                        errorText: isPasswordEmpty
+                            ? "Password cannot be empty"
+                            : !isPasswordValid
+                                ? "Your password must contain 1 Uppercase, 1 lowercase, number and a symbol."
+                                : null,
                         suffixIcon: const Icon(Icons.lock_open_outlined,
                             color: Colors.white),
                         border: InputBorder.none,
@@ -145,31 +187,35 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         ),
                         errorText: isConfirmPassEmpty
                             ? "Please write the password again"
-                            : null,
+                            : !isPasswordSame
+                                ? "The passwords are not the same."
+                                : null,
                         suffixIcon: const Icon(Icons.lock, color: Colors.white),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.all(20),
                       ),
                     ),
+                    const Padding(padding: EdgeInsets.all(10)),
                     ElevatedButton(
                       onPressed: () async {
+                        _checkInput();
                         Debug.printLog("Clicked Register.");
-                        // _checkInput();
-                        // if (!isEmailEmpty && !isPassEmpty && isEmailValid) {
-                        //   await BackendUtilities.checkBackendHealth()
-                        //       .then((isConnected) {
-                        //     if (!isConnected) {
-                        //       loginFailAlert(context,
-                        //           "Connection to server could not be established. Try again later.");
-                        //     }
-                        //   });
-                        //   // UserModel user = await UserController.authUser(
-                        //   //     pb, _emailController.text, _passController.text);
-                        //   // if (!user.isVerified && mounted) {
-                        //   //   await loginFailAlert(context,
-                        //   //       "The user is not yet verified. Check your email.");
-                        //   // }
-                        // }
+                        if (validateInputs()) {
+                          await BackendUtilities.checkBackendHealth()
+                              .then((bool isConnected) {
+                            if (!isConnected) {
+                              loginFailAlert(context,
+                                  "connection to server could not be established. try again later.");
+                            }
+                          });
+                          UserModel newUser = UserModel(
+                              _usernameController.text,
+                              "",
+                              _emailController.text,
+                              _passController[0].text,
+                              true);
+                          UserController.createNewUser(pb, newUser);
+                        }
                       },
                       style: ButtonStyle(
                         shape: MaterialStatePropertyAll(
@@ -189,4 +235,25 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
       ),
     );
   }
+
+  Future<dynamic> loginFailAlert(BuildContext context, String msg) =>
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return BlurryContainer.square(
+            child: AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(child: Text("Attention")),
+              content: Text(msg),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Ok."))
+              ],
+            ),
+          );
+        },
+      );
 }
