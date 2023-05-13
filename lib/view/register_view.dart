@@ -210,7 +210,6 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                           });
                           UserModel newUser = UserModel(
                               _usernameController.text,
-                              "",
                               _emailController.text,
                               _passController[0].text,
                               true);
