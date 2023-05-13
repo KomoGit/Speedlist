@@ -11,7 +11,7 @@ LoginUtilities loginUtilities = LoginUtilities();
 PocketBase pb = PocketBase("http://192.168.0.104:8090");
 late TextEditingController _emailController;
 bool isCredentialEmpty = true;
-late bool isEmailValid; // = loginUtilities.emailValidator();
+late bool isEmailValid;
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
