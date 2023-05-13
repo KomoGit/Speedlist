@@ -11,9 +11,9 @@ import '../debug/print.dart';
 
 PocketBase pb = PocketBase("http://192.168.0.104:8090");
 LoginUtilities loginUtilities = LoginUtilities();
-final TextEditingController _usernameController = TextEditingController();
-final TextEditingController _emailController = TextEditingController();
-final List<TextEditingController> _passController = List.generate(
+late TextEditingController _usernameController; // = TextEditingController();
+late TextEditingController _emailController; //= TextEditingController();
+late List<TextEditingController> _passController = List.generate(
     2, (i) => TextEditingController(),
     growable: false); //Contains pass and confirm pass values.
 
@@ -47,6 +47,15 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
   bool isPasswordValid = true;
   bool isEmailValid = true;
   bool isPasswordSame = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passController =
+        List.generate(2, (i) => TextEditingController(), growable: false);
+  }
 
   @override
   void dispose() {
@@ -103,6 +112,18 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                     Text(
                       "Register",
                       style: GoogleFonts.bebasNeue(
