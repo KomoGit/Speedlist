@@ -19,6 +19,10 @@ class UserModel {
   }
 }
 
+//You might be wondering why am I not using the UserModel itself.
+//Issues arise when we have to confirm user verification and when assinging id.
+//These things should be done outside of the application (Id Assigned auto and verification done via email confirmation).
+//To make it simples we use UserRegisterModel.
 class UserRegisterModel {
   String username;
   String email;
