@@ -6,6 +6,7 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
+import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/register_view.dart';
 import 'package:speedlist/view/widgets/Login%20Widgets/oauth_login_buttons.dart';
 
@@ -212,6 +213,16 @@ class _LoginPageInputState extends State<LoginPageInput> {
                   MaterialPageRoute(
                       builder: (context) => const ForgotPassword()))
             },
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
+            },
+            child: const Text(
+              "View without logging in",
+              style: TextStyle(fontSize: 12, color: Colors.white),
+            ),
           )
         ],
       ),
