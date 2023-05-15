@@ -38,8 +38,8 @@ class UserController {
       "username": user.username,
       "email": user.email,
       "emailVisibility": false,
-      "password": user.pass,
-      "passwordConfirm": user.pass2
+      "password": user.passwords[0],
+      "passwordConfirm": user.passwords[1]
     };
     try {
       await pb.collection('users').create(body: body);
