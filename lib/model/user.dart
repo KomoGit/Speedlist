@@ -6,8 +6,7 @@ class UserModel {
   String email;
   bool isVerified;
 
-  UserModel(
-      this.username, this.id, this.email, /*this.password,*/ this.isVerified);
+  UserModel(this.username, this.id, this.email, this.isVerified);
 
   static UserModel fromRecord(RecordModel model) {
     String username = model.getStringValue("username");
