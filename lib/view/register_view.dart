@@ -232,11 +232,14 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                             },
                           );
                           UserRegisterModel newUser = UserRegisterModel(
-                              _usernameController.text,
-                              _emailController.text,
+                              _usernameController.text.trim(),
+                              _emailController.text.trim(),
                               _passController[0].text,
                               _passController[1].text);
-                          UserController.createNewUser(pb, newUser);
+                          await UserController.createNewUser(pb, newUser)
+                              .then((String res) {
+                            loginFailAlert(context, res);
+                          });
                         }
                       },
                       style: ButtonStyle(
