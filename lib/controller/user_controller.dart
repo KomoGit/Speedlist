@@ -38,7 +38,6 @@ class UserController {
     try {
       await pb.collection('users').create(body: body);
     } catch (e) {
-      Debug.printLog(e);
       return loginUtilities.formatErrorMessage(e.toString());
     }
     return "Registration succesful, confirm your account by checking your email.";
