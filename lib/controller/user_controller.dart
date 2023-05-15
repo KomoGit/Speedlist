@@ -21,9 +21,15 @@ class UserController {
   }
 
   //We might require a bool to return incase something goes wrong?
-  static Future<void> requestUserPasswordReset(
+  static Future<String> requestUserPasswordReset(
       PocketBase pb, String email) async {
-    await pb.admins.requestPasswordReset(email);
+    try {
+      await pb.admins.requestPasswordReset(email);
+    } catch (e) {
+      Debug.printLog(e);
+      return e.toString();
+    }
+    return "Please check your email for further instructions.";
   }
 
   static Future<String> createNewUser(
