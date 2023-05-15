@@ -8,7 +8,7 @@ class UserController {
         .collection('users')
         .authWithPassword(usernameoremail, password)
         .timeout(const Duration(seconds: 10));
-    return UserModel.fromModel(authData.record!);
+    return UserModel.fromRecord(authData.record!);
   }
 
   //We might require a bool to return incase something goes wrong?
@@ -17,15 +17,15 @@ class UserController {
     await pb.admins.requestPasswordReset(email);
   }
 
-  static Future<void> createNewUser(PocketBase pb, UserModel user) async {
+  static Future<void> createNewUser(
+      PocketBase pb, UserRegisterModel user) async {
     final body = <String, dynamic>{
       "username": user.username,
       "email": user.email,
       "emailVisibility": false,
-      "password": user.password,
-      "passwordConfirm": "12345678"
+      "password": user.pass,
+      "passwordConfirm": user.pass2
     };
     await pb.collection('users').create(body: body);
-    //await pb.collection('users').requestVerification(user.email); Haven't configured that yet so.
   }
 }
