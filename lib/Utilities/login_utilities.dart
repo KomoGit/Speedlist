@@ -18,4 +18,13 @@ class LoginUtilities {
     }
     return false;
   }
+
+  String formatErrorMessage(String e) {
+    String message = e
+        .toString()
+        .split('message: ')[2] // Extract the substring after 'message: '
+        .split('.')[0] // Extract the substring before the next comma
+        .trim();
+    return message;
+  }
 }
