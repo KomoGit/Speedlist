@@ -11,9 +11,9 @@ import '../debug/print.dart';
 
 PocketBase pb = PocketBase("http://192.168.0.104:8090");
 LoginUtilities loginUtilities = LoginUtilities();
-late TextEditingController _usernameController; // = TextEditingController();
-late TextEditingController _emailController; //= TextEditingController();
-late List<TextEditingController> _passController = List.generate(
+late TextEditingController _usernameController;
+late TextEditingController _emailController;
+List<TextEditingController> _passController = List.generate(
     2, (i) => TextEditingController(),
     growable: false); //Contains pass and confirm pass values.
 
@@ -88,7 +88,8 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
         !isConfirmPassEmpty &&
         !isUsernameEmpty &&
         isEmailValid &&
-        isPasswordValid) {
+        isPasswordValid &&
+        isPasswordSame) {
       return true;
     }
     return false;
@@ -222,18 +223,19 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         _checkInput();
                         Debug.printLog("Clicked Register.");
                         if (validateInputs()) {
-                          await BackendUtilities.checkBackendHealth()
-                              .then((bool isConnected) {
-                            if (!isConnected) {
-                              loginFailAlert(context,
-                                  "connection to server could not be established. try again later.");
-                            }
-                          });
-                          UserModel newUser = UserModel(
+                          await BackendUtilities.checkBackendHealth().then(
+                            (bool isConnected) {
+                              if (!isConnected) {
+                                loginFailAlert(context,
+                                    "Connection to server could not be established. try again later.");
+                              }
+                            },
+                          );
+                          UserRegisterModel newUser = UserRegisterModel(
                               _usernameController.text,
                               _emailController.text,
                               _passController[0].text,
-                              true);
+                              _passController[1].text);
                           UserController.createNewUser(pb, newUser);
                         }
                       },
@@ -250,7 +252,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
