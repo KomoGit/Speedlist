@@ -25,8 +25,6 @@ class UserModel {
 class UserRegisterModel {
   String username;
   String email;
-  String pass;
-  String pass2;
-
-  UserRegisterModel(this.username, this.email, this.pass, this.pass2);
+  List<String> passwords; //Contains both password and confirm password.
+  UserRegisterModel(this.username, this.email, this.passwords);
 }
