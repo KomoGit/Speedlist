@@ -19,6 +19,7 @@ class LoginUtilities {
     return false;
   }
 
+//Thanks Chat-GPT :^)
   String formatErrorMessage(String e) {
     String message = e
         .toString()
