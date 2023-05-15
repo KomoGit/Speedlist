@@ -231,11 +231,15 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                               }
                             },
                           );
+                          List<String> passwords = [
+                            _passController[0].text,
+                            _passController[1].text
+                          ];
                           UserRegisterModel newUser = UserRegisterModel(
-                              _usernameController.text.trim(),
-                              _emailController.text.trim(),
-                              _passController[0].text,
-                              _passController[1].text);
+                            _usernameController.text.trim(),
+                            _emailController.text.trim(),
+                            passwords,
+                          );
                           await UserController.createNewUser(pb, newUser)
                               .then((String res) {
                             loginFailAlert(context, res);
