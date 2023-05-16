@@ -66,18 +66,20 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
   }
 
   void _checkInput() {
-    setState(() {
-      _isUsernameEmpty = _usernameController.text.isEmpty;
-      _isEmailEmpty = _emailController.text.isEmpty;
-      _isPasswordEmpty = _passController[0].text.isEmpty;
-      _isConfirmPassEmpty = _passController[1].text.isEmpty;
-      _isPasswordValid =
-          loginUtilities.passwordValidator(_passController[0].text);
-      _isPasswordSame = loginUtilities.arePasswordsSame(
-          _passController[0].text, _passController[1].text);
-      _isEmailValid = loginUtilities.emailValidator(_emailController.text);
-      return;
-    });
+    setState(
+      () {
+        _isUsernameEmpty = _usernameController.text.isEmpty;
+        _isEmailEmpty = _emailController.text.isEmpty;
+        _isPasswordEmpty = _passController[0].text.isEmpty;
+        _isConfirmPassEmpty = _passController[1].text.isEmpty;
+        _isPasswordValid =
+            loginUtilities.passwordValidator(_passController[0].text);
+        _isPasswordSame = loginUtilities.arePasswordsSame(
+            _passController[0].text, _passController[1].text);
+        _isEmailValid = loginUtilities.emailValidator(_emailController.text);
+        return;
+      },
+    );
   }
 
   bool validateInputs() {
@@ -217,7 +219,9 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         contentPadding: const EdgeInsets.all(20),
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.all(10)),
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
                     ElevatedButton(
                       onPressed: () async {
                         _checkInput();
@@ -251,7 +255,8 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                       //The button stays greyed out even when it is filled correctly. The checkInput method is called only when the button is pressed. Uh Oh.
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           backgroundColor:
                               validateInputs() ? Colors.blue : Colors.grey),
                       child: const Text("Register"),
