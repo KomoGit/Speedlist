@@ -128,7 +128,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                       onPressed: () async {
                         _checkInput();
                         if (!_isEmailEmpty && !_isPassEmpty && _isEmailValid) {
-                          await BackendUtilities.checkBackendHealth()
+                          await BackendUtilities.getBackendStatus()
                               .then((isConnected) {
                             if (!isConnected) {
                               loginFailAlert(context,

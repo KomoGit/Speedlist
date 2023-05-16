@@ -226,7 +226,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                       onPressed: () async {
                         _checkInput();
                         if (validateInputs()) {
-                          await BackendUtilities.checkBackendHealth().then(
+                          await BackendUtilities.getBackendStatus().then(
                             (bool isConnected) {
                               if (!isConnected) {
                                 loginFailAlert(context,

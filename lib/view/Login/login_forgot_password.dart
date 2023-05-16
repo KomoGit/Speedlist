@@ -8,8 +8,8 @@ import '../../Utilities/backend_utilities.dart';
 
 LoginUtilities loginUtilities = LoginUtilities();
 late TextEditingController _emailController;
-bool _isEmailEmpty = true;
 late bool _isEmailValid;
+bool _isEmailEmpty = true;
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -121,7 +121,7 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                       onPressed: () async {
                         checkInput();
                         if (!_isEmailEmpty && _isEmailValid) {
-                          await BackendUtilities.checkBackendHealth().then(
+                          await BackendUtilities.getBackendStatus().then(
                             (isConnected) {
                               if (!isConnected) {
                                 loginFailAlert(context,

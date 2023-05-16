@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:pocketbase/pocketbase.dart';
 
+import '../debug/print.dart';
+
 //import '../debug/print.dart';
 
 class BackendUtilities {
@@ -8,8 +10,8 @@ class BackendUtilities {
     return PocketBase("http://192.168.0.104:8090");
   }
 
-  static Future<bool> checkBackendHealth() async {
-    const url = "http://192.168.0.104:8090/api/health";
+  static Future<bool> getBackendStatus() async {
+    const url = "http://192.168.0.104:8090";
     try {
       final response =
           await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
