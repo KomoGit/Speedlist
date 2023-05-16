@@ -1,7 +1,6 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pocketbase/pocketbase.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/model/user.dart';
@@ -12,7 +11,6 @@ import 'package:speedlist/view/widgets/Login%20Widgets/oauth_login_buttons.dart'
 
 import '../../Utilities/login_utilities.dart';
 
-PocketBase pb = PocketBase("http://192.168.0.104:8090");
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
@@ -23,12 +21,13 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/pexels-photo-1379636.jpeg"),
-              fit: BoxFit.cover),
-        ),
-        child: const LoginPageInput());
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage("assets/images/pexels-photo-1379636.jpeg"),
+            fit: BoxFit.cover),
+      ),
+      child: const LoginPageInput(),
+    );
   }
 }
 
@@ -40,9 +39,9 @@ class LoginPageInput extends StatefulWidget {
 }
 
 class _LoginPageInputState extends State<LoginPageInput> {
-  bool isEmailEmpty = false;
-  bool isPassEmpty = false;
-  bool isEmailValid = true;
+  bool _isEmailEmpty = false;
+  bool _isPassEmpty = false;
+  bool _isEmailValid = true;
 
   @override
   void dispose() {
@@ -53,9 +52,9 @@ class _LoginPageInputState extends State<LoginPageInput> {
 
   void _checkInput() {
     setState(() {
-      isEmailEmpty = _emailController.text.isEmpty;
-      isPassEmpty = _passController.text.isEmpty;
-      isEmailValid = loginUtilities.emailValidator(_emailController.text);
+      _isEmailEmpty = _emailController.text.isEmpty;
+      _isPassEmpty = _passController.text.isEmpty;
+      _isEmailValid = loginUtilities.emailValidator(_emailController.text);
       return;
     });
   }
@@ -93,9 +92,9 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText: isEmailEmpty
+                        errorText: _isEmailEmpty
                             ? "Email cannot be empty"
-                            : !isEmailValid
+                            : !_isEmailValid
                                 ? "Email you have entered is invalid"
                                 : null,
                         suffixIcon: const Icon(
@@ -118,7 +117,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           borderSide: BorderSide(color: Colors.red),
                         ),
                         errorText:
-                            isPassEmpty ? "Password cannot be empty" : null,
+                            _isPassEmpty ? "Password cannot be empty" : null,
                         suffixIcon: const Icon(Icons.lock_open_outlined,
                             color: Colors.white),
                         border: InputBorder.none,
@@ -128,7 +127,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ElevatedButton(
                       onPressed: () async {
                         _checkInput();
-                        if (!isEmailEmpty && !isPassEmpty && isEmailValid) {
+                        if (!_isEmailEmpty && !_isPassEmpty && _isEmailValid) {
                           await BackendUtilities.checkBackendHealth()
                               .then((isConnected) {
                             if (!isConnected) {
@@ -137,7 +136,9 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             }
                           });
                           UserModel user = await UserController.authUser(
-                              pb, _emailController.text, _passController.text);
+                              BackendUtilities.getBackendAccess(),
+                              _emailController.text,
+                              _passController.text);
                           if (!user.isVerified && mounted) {
                             await loginFailAlert(context,
                                 "The user is not yet verified. Check your email.");

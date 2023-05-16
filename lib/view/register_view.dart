@@ -1,15 +1,12 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pocketbase/pocketbase.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/model/user.dart';
 
 import '../Utilities/backend_utilities.dart';
 import '../Utilities/login_utilities.dart';
-import '../debug/print.dart';
 
-PocketBase pb = PocketBase("http://192.168.0.104:8090");
 LoginUtilities loginUtilities = LoginUtilities();
 late TextEditingController _usernameController;
 late TextEditingController _emailController;
@@ -40,15 +37,15 @@ class RegisterPageInput extends StatefulWidget {
 }
 
 class _RegisterPageInputState extends State<RegisterPageInput> {
-  bool isUsernameEmpty = false;
-  bool isEmailEmpty = false;
-  bool isPasswordEmpty = false;
-  bool isConfirmPassEmpty = false;
+  bool _isUsernameEmpty = false;
+  bool _isEmailEmpty = false;
+  bool _isPasswordEmpty = false;
+  bool _isConfirmPassEmpty = false;
   //To prevent immediate error and confuse the user, we keep these as true.
   //Except in forgot password page which helps specify the issue to user.
-  bool isPasswordValid = true;
-  bool isEmailValid = true;
-  bool isPasswordSame = true;
+  bool _isPasswordValid = true;
+  bool _isEmailValid = true;
+  bool _isPasswordSame = true;
 
   @override
   void initState() {
@@ -70,28 +67,28 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
 
   void _checkInput() {
     setState(() {
-      isUsernameEmpty = _usernameController.text.isEmpty;
-      isEmailEmpty = _emailController.text.isEmpty;
-      isPasswordEmpty = _passController[0].text.isEmpty;
-      isConfirmPassEmpty = _passController[1].text.isEmpty;
-      isPasswordValid =
+      _isUsernameEmpty = _usernameController.text.isEmpty;
+      _isEmailEmpty = _emailController.text.isEmpty;
+      _isPasswordEmpty = _passController[0].text.isEmpty;
+      _isConfirmPassEmpty = _passController[1].text.isEmpty;
+      _isPasswordValid =
           loginUtilities.passwordValidator(_passController[0].text);
-      isPasswordSame = loginUtilities.arePasswordsSame(
+      _isPasswordSame = loginUtilities.arePasswordsSame(
           _passController[0].text, _passController[1].text);
-      isEmailValid = loginUtilities.emailValidator(_emailController.text);
+      _isEmailValid = loginUtilities.emailValidator(_emailController.text);
       return;
     });
   }
 
   bool validateInputs() {
-    if (!isUsernameEmpty &&
-        !isEmailEmpty &&
-        !isPasswordEmpty &&
-        !isConfirmPassEmpty &&
-        !isUsernameEmpty &&
-        isEmailValid &&
-        isPasswordValid &&
-        isPasswordSame) {
+    if (!_isUsernameEmpty &&
+        !_isEmailEmpty &&
+        !_isPasswordEmpty &&
+        !_isConfirmPassEmpty &&
+        !_isUsernameEmpty &&
+        _isEmailValid &&
+        _isPasswordValid &&
+        _isPasswordSame) {
       return true;
     }
     return false;
@@ -143,8 +140,9 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText:
-                            isUsernameEmpty ? "Username cannot be empty" : null,
+                        errorText: _isUsernameEmpty
+                            ? "Username cannot be empty"
+                            : null,
                         suffixIcon: const Icon(
                           Icons.person_2_outlined,
                           color: Colors.white,
@@ -163,9 +161,9 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText: isEmailEmpty
+                        errorText: _isEmailEmpty
                             ? "Email cannot be empty"
-                            : !isEmailValid
+                            : !_isEmailValid
                                 ? "Email you have entered is invalid"
                                 : null,
                         suffixIcon: const Icon(
@@ -187,9 +185,9 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText: isPasswordEmpty
+                        errorText: _isPasswordEmpty
                             ? "Password cannot be empty"
-                            : !isPasswordValid
+                            : !_isPasswordValid
                                 ? "Your password must contain 1 Uppercase, 1 lowercase, number and a symbol."
                                 : null,
                         suffixIcon: const Icon(Icons.lock_open_outlined,
@@ -209,9 +207,9 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText: isConfirmPassEmpty
+                        errorText: _isConfirmPassEmpty
                             ? "Please write the password again"
-                            : !isPasswordSame
+                            : !_isPasswordSame
                                 ? "The passwords are not the same."
                                 : null,
                         suffixIcon: const Icon(Icons.lock, color: Colors.white),
@@ -241,7 +239,9 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                             _emailController.text.trim(),
                             passwords,
                           );
-                          await UserController.createNewUser(pb, newUser).then(
+                          await UserController.createNewUser(
+                                  BackendUtilities.getBackendAccess(), newUser)
+                              .then(
                             (String res) {
                               loginFailAlert(context, res);
                             },

@@ -1,17 +1,15 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pocketbase/pocketbase.dart';
 import 'package:speedlist/Utilities/login_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 
 import '../../Utilities/backend_utilities.dart';
 
 LoginUtilities loginUtilities = LoginUtilities();
-PocketBase pb = PocketBase("http://192.168.0.104:8090");
 late TextEditingController _emailController;
-bool isCredentialEmpty = true;
-late bool isEmailValid;
+bool _isEmailEmpty = true;
+late bool _isEmailValid;
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -19,12 +17,13 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/pexels-photo-1379636.jpeg"),
-              fit: BoxFit.cover),
-        ),
-        child: const ForgotPasswordInput());
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage("assets/images/pexels-photo-1379636.jpeg"),
+            fit: BoxFit.cover),
+      ),
+      child: const ForgotPasswordInput(),
+    );
   }
 }
 
@@ -40,7 +39,7 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
   void initState() {
     super.initState();
     _emailController = TextEditingController();
-    isEmailValid = loginUtilities.emailValidator(_emailController.text);
+    _isEmailValid = loginUtilities.emailValidator(_emailController.text);
   }
 
   @override
@@ -50,14 +49,16 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
   }
 
   void checkInput() {
-    setState(() {
-      isCredentialEmpty = _emailController.text.isEmpty;
-    });
+    setState(
+      () {
+        _isEmailEmpty = _emailController.text.isEmpty;
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    isEmailValid = loginUtilities.emailValidator(_emailController.text);
+    _isEmailValid = loginUtilities.emailValidator(_emailController.text);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -103,9 +104,9 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                         errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        errorText: isCredentialEmpty
+                        errorText: _isEmailEmpty
                             ? "Please insert your email used in registration"
-                            : !isEmailValid
+                            : !_isEmailValid
                                 ? "Email you have entered is invalid"
                                 : null,
                         suffixIcon: const Icon(
@@ -119,7 +120,7 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                     ElevatedButton(
                       onPressed: () async {
                         checkInput();
-                        if (!isCredentialEmpty && isEmailValid) {
+                        if (!_isEmailEmpty && _isEmailValid) {
                           await BackendUtilities.checkBackendHealth().then(
                             (isConnected) {
                               if (!isConnected) {
@@ -127,7 +128,8 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                                     "Connection to server could not be established. Try again later.");
                               } else {
                                 UserController.requestUserPasswordReset(
-                                    pb, _emailController.text);
+                                    BackendUtilities.getBackendAccess(),
+                                    _emailController.text);
                               }
                             },
                           );
