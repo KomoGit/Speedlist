@@ -6,13 +6,14 @@ import '../debug/print.dart';
 
 class UserController {
   static LoginUtilities loginUtilities = LoginUtilities();
+
   static Future<UserModel> authUser(
-      PocketBase pb, String usernameoremail, password) async {
+      PocketBase pb, String email, password) async {
     late RecordAuth authData;
     try {
       authData = await pb
           .collection('users')
-          .authWithPassword(usernameoremail, password)
+          .authWithPassword(email, password)
           .timeout(const Duration(seconds: 10));
     } catch (e) {
       Debug.printLog(e);
@@ -24,7 +25,9 @@ class UserController {
   static Future<String> requestUserPasswordReset(
       PocketBase pb, String email) async {
     try {
-      await pb.admins.requestPasswordReset(email);
+      await pb.admins
+          .requestPasswordReset(email)
+          .timeout(const Duration(seconds: 10));
     } catch (e) {
       Debug.printLog(e);
       return e.toString();
@@ -42,7 +45,10 @@ class UserController {
       "passwordConfirm": user.passwords[1]
     };
     try {
-      await pb.collection('users').create(body: body);
+      await pb
+          .collection('users')
+          .create(body: body)
+          .timeout(const Duration(seconds: 10));
     } catch (e) {
       return loginUtilities.formatErrorMessage(e.toString());
     }

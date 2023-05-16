@@ -7,7 +7,10 @@ import '../model/categories.dart';
 
 class CategoryController {
   Future<List<CategoryModel>> fromRecordsToModels(PocketBase pb) async {
-    var rawData = await pb.collection('categories').getFullList();
+    var rawData = await pb
+        .collection('categories')
+        .getFullList()
+        .timeout(const Duration(seconds: 10));
     List<RecordModel> listOfCategory = rawData;
     List<CategoryModel> categories = [];
     for (RecordModel model in listOfCategory) {
