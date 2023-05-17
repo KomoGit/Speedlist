@@ -5,23 +5,22 @@ import 'package:speedlist/model/user.dart';
 import '../debug/print.dart';
 
 class UserController {
-  static LoginUtilities loginUtilities = LoginUtilities();
+  static final LoginUtilities _loginUtilities = LoginUtilities();
 
   static Future<UserModel> authUser(
-      PocketBase pb, String email, password) async {
+      PocketBase pb, String email, String password) async {
     late RecordAuth authData;
     try {
       authData = await pb
           .collection('users')
           .authWithPassword(email, password)
           .timeout(const Duration(seconds: 10));
+      return UserModel.fromRecord(authData.record!);
     } catch (e) {
-      Debug.printLog(e);
+      throw Exception(e);
     }
-    return UserModel.fromRecord(authData.record!);
   }
 
-  //We might require a bool to return incase something goes wrong?
   static Future<String> requestUserPasswordReset(
       PocketBase pb, String email) async {
     try {
@@ -50,7 +49,7 @@ class UserController {
           .create(body: body)
           .timeout(const Duration(seconds: 10));
     } catch (e) {
-      return loginUtilities.formatErrorMessage(e.toString());
+      return _loginUtilities.formatErrorMessage(e.toString());
     }
     return "Registration succesful, confirm your account by checking your email.";
   }
