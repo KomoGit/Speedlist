@@ -1,5 +1,3 @@
-// import 'package:pocketbase/pocketbase.dart';
-
 class CategoryItem {
   String itemName;
   String itemDescription;
