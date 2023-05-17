@@ -150,6 +150,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
+                        //These two codes are repeated heavily. Find a way to fix it
+                        _checkConnectivity();
                         if (connectivityResult == ConnectivityResult.none) {
                           loginFailAlert(context,
                               "You are not connected to the internet. Turn on mobile network or WiFi");
@@ -164,14 +166,22 @@ class _LoginPageInputState extends State<LoginPageInput> {
                                     "Connection to server could not be established. Try again later.");
                               }
                             },
-                          );
-                          UserModel user = await UserController.authUser(
+                          ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
+                          try {
+                            // ignore: unused_local_variable
+                            UserModel user = await UserController.authUser(
                               BackendUtilities.getBackendAccess(),
                               _emailController.text.trim(),
-                              _passController.text);
-                          if (!user.isVerified && mounted) {
-                            await loginFailAlert(context,
-                                "The user is not yet verified. Check your email.");
+                              _passController.text.trim(),
+                            );
+                          } catch (e) {
+                            String errmsg = loginUtilities.formatErrorMessage(
+                              e.toString(),
+                            );
+                            if (mounted) {
+                              await loginFailAlert(context,
+                                  "$errmsg. Check your email or password for errors.");
+                            }
                           }
                         }
                       },
@@ -192,9 +202,11 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           return;
                         }
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Register()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Register(),
+                          ),
+                        );
                       },
                       child: const Text.rich(
                         TextSpan(
@@ -202,11 +214,12 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           style: TextStyle(fontSize: 12, color: Colors.white),
                           children: <TextSpan>[
                             TextSpan(
-                                text: "Register.",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                )),
+                              text: "Register.",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ],
                         ),
                       ),
