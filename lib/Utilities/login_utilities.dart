@@ -22,7 +22,7 @@ class LoginUtilities {
 //Thanks Chat-GPT :^)
   String formatErrorMessage(String e) {
     String message = e
-        .split('message: ')[2] // Extract the substring after 'message: '
+        .split('message: ')[1] // Extract the substring after 'message: '
         .split('.')[0] // Extract the substring before the next comma
         .trim();
     return message;
