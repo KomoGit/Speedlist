@@ -1,4 +1,5 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
@@ -39,15 +40,31 @@ class LoginPageInput extends StatefulWidget {
 }
 
 class _LoginPageInputState extends State<LoginPageInput> {
+  late dynamic connectivityResult;
   bool _isEmailEmpty = false;
   bool _isPassEmpty = false;
   bool _isEmailValid = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkConnectivity();
+  }
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passController.dispose();
+  }
+
+  Future<ConnectivityResult> _checkConnectivity() async {
+    try {
+      connectivityResult = await (Connectivity().checkConnectivity());
+      return connectivityResult;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   void _checkInput() {
@@ -57,6 +74,13 @@ class _LoginPageInputState extends State<LoginPageInput> {
       _isEmailValid = loginUtilities.emailValidator(_emailController.text);
       return;
     });
+  }
+
+  bool _validateInputs() {
+    if (!_isEmailEmpty && !_isPassEmpty && _isEmailValid) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -126,18 +150,24 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
+                        if (connectivityResult == ConnectivityResult.none) {
+                          loginFailAlert(context,
+                              "You are not connected to the internet. Turn on mobile network or WiFi");
+                          return;
+                        }
                         _checkInput();
-                        if (!_isEmailEmpty && !_isPassEmpty && _isEmailValid) {
-                          await BackendUtilities.getBackendStatus()
-                              .then((isConnected) {
-                            if (!isConnected) {
-                              loginFailAlert(context,
-                                  "Connection to server could not be established. Try again later.");
-                            }
-                          });
+                        if (_validateInputs()) {
+                          await BackendUtilities.getBackendStatus().then(
+                            (isConnected) {
+                              if (!isConnected) {
+                                loginFailAlert(context,
+                                    "Connection to server could not be established. Try again later.");
+                              }
+                            },
+                          );
                           UserModel user = await UserController.authUser(
                               BackendUtilities.getBackendAccess(),
-                              _emailController.text,
+                              _emailController.text.trim(),
                               _passController.text);
                           if (!user.isVerified && mounted) {
                             await loginFailAlert(context,
@@ -156,6 +186,11 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     ),
                     TextButton(
                       onPressed: () {
+                        if (connectivityResult == ConnectivityResult.none) {
+                          loginFailAlert(context,
+                              "You are not connected to the internet. Turn on mobile network or WiFi");
+                          return;
+                        }
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -208,15 +243,25 @@ class _LoginPageInputState extends State<LoginPageInput> {
                 decoration: TextDecoration.underline,
               ),
             ),
-            onPressed: () => {
+            onPressed: () async {
+              if (connectivityResult == ConnectivityResult.none) {
+                loginFailAlert(context,
+                    "You are not connected to the internet. Turn on mobile network or WiFi");
+                return;
+              }
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ForgotPassword()))
+                      builder: (context) => const ForgotPassword()));
             },
           ),
           TextButton(
             onPressed: () {
+              if (connectivityResult == ConnectivityResult.none) {
+                loginFailAlert(context,
+                    "You are not connected to the internet. Turn on mobile network or WiFi");
+                return;
+              }
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Home()));
             },
@@ -245,7 +290,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text("Ok."))
+                    child: const Text("Ok"))
               ],
             ),
           );
