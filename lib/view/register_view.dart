@@ -82,6 +82,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
     );
   }
 
+  //Allows us not to write all this in Regstier OnPressed(){}
   bool validateInputs() {
     if (!_isUsernameEmpty &&
         !_isEmailEmpty &&
@@ -254,11 +255,11 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                       },
                       //The button stays greyed out even when it is filled correctly. The checkInput method is called only when the button is pressed. Uh Oh.
                       style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          backgroundColor:
-                              validateInputs() ? Colors.blue : Colors.grey),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        backgroundColor: Colors.blue,
+                      ),
                       child: const Text("Register"),
                     ),
                   ],
@@ -285,7 +286,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text("Ok."))
+                    child: const Center(child: Text("Ok.")))
               ],
             ),
           );
