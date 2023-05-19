@@ -4,7 +4,7 @@ import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/category_controller.dart';
 import 'package:speedlist/model/categories.dart';
 import 'package:speedlist/view/widgets/drawer.dart';
-import 'package:speedlist/view/widgets/view_category.dart';
+import 'package:speedlist/view/widgets/category_widget.dart';
 
 import '../debug/print.dart';
 
