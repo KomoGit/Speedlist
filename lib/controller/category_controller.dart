@@ -6,14 +6,16 @@ import '../model/categories.dart';
 //#LOGIN - example@example.com
 
 class CategoryController {
-  Future<List<CategoryModel>> fromRecordsToModels(PocketBase pb) async {
-    var rawData = await pb
+  Future<List<CategoryModel>> getAllCategories(PocketBase pb) async {
+    //This is going to cause a very huge bottleneck for our application.
+    //Best way to optimize this would be to ensure only a number of items are being returned and spread it among pages.
+    //There will be issues in optimizing the code to not send out same 20 items again and again.
+    List<RecordModel> rawData = await pb
         .collection('categories')
         .getFullList()
         .timeout(const Duration(seconds: 10));
-    List<RecordModel> listOfCategory = rawData;
     List<CategoryModel> categories = [];
-    for (RecordModel model in listOfCategory) {
+    for (RecordModel model in rawData) {
       categories.add(CategoryModel.fromModel(model));
     }
     return categories;
