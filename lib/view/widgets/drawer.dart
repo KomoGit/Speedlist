@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:speedlist/view/home.dart';
 
+import '../../model/user.dart';
+import 'Drawer Widgets/drawer_profile_widget.dart';
+
+// Problem arises when we view home in without logging in. As this causes initalization error.
+// Solution would be to make a default user and override that user when logging in.
+// When logging out we will do the opposite.
 class PersistentDrawer extends StatelessWidget {
-  const PersistentDrawer({super.key});
+  final UserModel user;
+  const PersistentDrawer({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -10,44 +16,9 @@ class PersistentDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(-10, 1),
-                )
-              ],
-              image: const DecorationImage(
-                  image: AssetImage(
-                      "assets/images/pexels-photo-13766882.jpeg"), //Make it so this image can be changed in settings.
-                  fit: BoxFit.cover),
-            ),
-            child: InkWell(
-              // onTap: (() => DebugOut.printLog("Profile Clicked")),
-              onTap: (() => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Home()))),
-              child: const Padding(
-                padding: EdgeInsets.all(0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                        child: CircleAvatar(
-                      maxRadius: 50,
-                      backgroundImage: NetworkImage(
-                          "https://randomuser.me/api/portraits/women/31.jpg"),
-                    )),
-                    Flexible(
-                      child: Text("Hello User"),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ), //When adding a list item, ensure that you have added them on Localization first.
+          DrawerProfileWidget(
+              user:
+                  user), //When adding a list item, ensure that you have added them on Localization first.
         ],
       ),
     );
