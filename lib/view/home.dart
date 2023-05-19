@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
+import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/category_controller.dart';
 import 'package:speedlist/model/categories.dart';
 import 'package:speedlist/view/widgets/drawer.dart';
@@ -17,7 +18,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   static Future<List<CategoryModel>> loadData() async {
     return await CategoryController()
-        .fromRecordsToModels(BackendUtilities.getBackendAccess());
+        .getAllCategories(BackendUtilities.getBackendAccess());
   }
 
   final Future<List<CategoryModel>> _categoryData = loadData();
@@ -31,8 +32,9 @@ class _HomeState extends State<Home> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        drawer:
-            const PersistentDrawer(), //The drawer will be dynamic, it will be filled with items dynamically. Remove const once implemented
+        drawer: PersistentDrawer(
+          user: UserUtilities.user,
+        ), //The drawer will be dynamic, it will be filled with items dynamically. Remove const once implemented
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
