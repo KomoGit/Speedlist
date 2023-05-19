@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
+import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
@@ -40,6 +41,7 @@ class LoginPageInput extends StatefulWidget {
 }
 
 class _LoginPageInputState extends State<LoginPageInput> {
+  late UserModel user;
   late dynamic connectivityResult;
   bool _isEmailEmpty = false;
   bool _isPassEmpty = false;
@@ -169,11 +171,20 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
                           try {
                             // ignore: unused_local_variable
-                            UserModel user = await UserController.authUser(
+                            user = await UserController.authUser(
                               BackendUtilities.getBackendAccess(),
                               _emailController.text.trim(),
                               _passController.text.trim(),
                             );
+                            UserUtilities.user = user;
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                ),
+                              );
+                            }
                           } catch (e) {
                             String errmsg = loginUtilities.formatErrorMessage(
                               e.toString(),
