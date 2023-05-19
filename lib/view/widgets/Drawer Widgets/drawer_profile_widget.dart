@@ -45,7 +45,7 @@ class DrawerProfileWidget extends StatelessWidget {
                 ),
               ),
               Flexible(
-                child: Text("Hello $user.username"),
+                child: Text("Hello ${user.username}"),
               )
             ],
           ),
