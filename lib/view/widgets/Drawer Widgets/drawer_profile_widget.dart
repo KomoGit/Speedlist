@@ -37,11 +37,10 @@ class DrawerProfileWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Flexible(
+              Flexible(
                 child: CircleAvatar(
                   maxRadius: 50,
-                  backgroundImage: NetworkImage(
-                      "https://randomuser.me/api/portraits/women/31.jpg"),
+                  backgroundImage: NetworkImage(user.profilePicture),
                 ),
               ),
               Flexible(
