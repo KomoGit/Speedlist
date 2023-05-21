@@ -53,4 +53,15 @@ class UserController {
     }
     return "Registration succesful, confirm your account by checking your email.";
   }
+
+  //This is one of those temporary measures. Yes that type......it will stay here for a while.
+  static Future<String> getProfilePictureUrl(
+      PocketBase pb, UserModel user) async {
+    //What you see in collection() is the id of user collection in PocketBase. I had to hard code that in there. It is a safety issue but will do now...I sound like those youtube videos
+    final RecordModel record =
+        await pb.collection('gr29v07m0ysyep8').getOne(user.id);
+    return pb
+        .getFileUrl(record, record.getStringValue('profilepicture'))
+        .toString();
+  }
 }
