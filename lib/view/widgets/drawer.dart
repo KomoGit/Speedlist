@@ -15,10 +15,8 @@ class PersistentDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children: [
-          DrawerProfileWidget(
-              user:
-                  user), //When adding a list item, ensure that you have added them on Localization first.
+        children: const [
+          DrawerProfileWidget(), //When adding a list item, ensure that you have added them on Localization first.
         ],
       ),
     );
