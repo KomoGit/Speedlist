@@ -307,14 +307,17 @@ class _LoginPageInputState extends State<LoginPageInput> {
           return BlurryContainer.square(
             child: AlertDialog(
               backgroundColor: Colors.white,
-              title: const Center(child: Text("Attention")),
+              title: const Center(
+                child: Text("Attention"),
+              ),
               content: Text(msg),
               actions: [
                 TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Ok"))
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Ok"),
+                )
               ],
             ),
           );
