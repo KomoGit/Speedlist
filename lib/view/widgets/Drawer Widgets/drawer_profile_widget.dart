@@ -17,7 +17,8 @@ class DrawerProfileWidget extends StatefulWidget {
 
 class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
   late UserModel _user;
-  late String userProfilePicture;
+  late String userProfilePicture =
+      "https://img.icons8.com/?size=512&id=7I3BjCqe9rjG&format=png"; //Field has not been initialized issue. Give it a default value so it doesn't cause the error.
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
               ),
               Flexible(
                 child: Text("Hello ${_user.username}"),
-              )
+              ),
             ],
           ),
         ),
