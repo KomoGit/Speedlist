@@ -7,11 +7,11 @@ class LoginUtilities {
 
   bool passwordValidator(String pass) {
     return RegExp(
-            r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
+            r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~]).{8,}$")
         .hasMatch(pass);
   }
 
-  // Validates if password and confrim password are one and the same.
+  // Validates if password and confirm password are one and the same.
   bool arePasswordsSame(String pass1, String pass2) {
     if (pass1 == pass2) {
       return true;
