@@ -17,34 +17,25 @@ class DrawerProfileWidget extends StatefulWidget {
 
 class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
   late UserModel _user;
-  late String userProfilePicture =
-      "https://img.icons8.com/?size=512&id=7I3BjCqe9rjG&format=png"; //Field has not been initialized issue. Give it a default value so it doesn't cause the error.
+  late String _userProfilePicture = UserUtilities.userProfilePicture;
 
   @override
   void initState() {
     super.initState();
-    _getUserProfilePicture();
     _user = UserUtilities.user;
+    _getUserProfilePicture();
   }
 
   _getUserProfilePicture() async {
-    userProfilePicture = await UserController.getProfilePictureUrl(
+    _userProfilePicture = await UserController.getProfilePictureUrl(
         BackendUtilities.getBackendAccess(), _user);
   }
 
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(-10, 1),
-          )
-        ],
-        image: const DecorationImage(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
             image: AssetImage(
                 "assets/images/pexels-photo-13766882.jpeg"), //Make it so this image can be changed in settings.
             fit: BoxFit.cover),
@@ -65,7 +56,7 @@ class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
               Flexible(
                 child: CircleAvatar(
                   maxRadius: 50,
-                  backgroundImage: NetworkImage(userProfilePicture),
+                  backgroundImage: NetworkImage(_userProfilePicture),
                 ),
               ),
               Flexible(
