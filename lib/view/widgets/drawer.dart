@@ -4,7 +4,7 @@ import 'package:speedlist/debug/print.dart';
 import '../../model/user.dart';
 import 'Drawer Widgets/drawer_profile_widget.dart';
 
-// Problem arises when we view home in without logging in. As this causes initalization error.
+// Problem arises when we view home in without logging in. As this causes initialization error.
 // Solution would be to make a default user and override that user when logging in.
 // When logging out we will do the opposite.
 class PersistentDrawer extends StatelessWidget {
@@ -18,16 +18,13 @@ class PersistentDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const DrawerProfileWidget(), //When adding a list item, ensure that you have added them on Localization first.
-          Expanded(
-            child: Container(),
-          ),
           ElevatedButton.icon(
             onPressed: () => Debug.printLog("Home Button Clicked"),
             style: const ButtonStyle(
               alignment: Alignment.center,
             ),
             icon: const Icon(
-              size: 48,
+              size: 32,
               Icons.home_outlined,
               color: Colors.white,
             ),
