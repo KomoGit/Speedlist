@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/debug/print.dart';
 
 import '../../model/user.dart';
+import '../Login/login_view.dart';
 import 'Drawer Widgets/drawer_profile_widget.dart';
 
 // Problem arises when we view home in without logging in. As this causes initialization error.
@@ -29,6 +31,26 @@ class PersistentDrawer extends StatelessWidget {
               color: Colors.white,
             ),
             label: const Text("Home"),
+          ),
+          ElevatedButton.icon(
+            onPressed: ()  {
+              UserUtilities.setUserToDefault();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
+            },
+            style: const ButtonStyle(
+              alignment: Alignment.center,
+            ),
+            icon: const Icon(
+              size: 32,
+              Icons.login_outlined,
+              color: Colors.white,
+            ),
+            label: const Text("Log Out"),
           ),
         ],
       ),
