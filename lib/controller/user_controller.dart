@@ -2,7 +2,6 @@ import 'package:pocketbase/pocketbase.dart';
 import 'package:speedlist/Utilities/login_utilities.dart';
 import 'package:speedlist/model/user.dart';
 
-import '../debug/print.dart';
 
 class UserController {
   static final LoginUtilities _loginUtilities = LoginUtilities();
@@ -28,7 +27,6 @@ class UserController {
           .requestPasswordReset(email)
           .timeout(const Duration(seconds: 10),);
     } catch (e) {
-      Debug.printLog(e);
       return e.toString();
     }
     return "Please check your email for further instructions.";
