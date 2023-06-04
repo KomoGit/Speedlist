@@ -6,9 +6,6 @@ import '../../model/user.dart';
 import '../Login/login_view.dart';
 import 'Drawer Widgets/drawer_profile_widget.dart';
 
-// Problem arises when we view home in without logging in. As this causes initialization error.
-// Solution would be to make a default user and override that user when logging in.
-// When logging out we will do the opposite.
 class PersistentDrawer extends StatelessWidget {
   final UserModel user;
   const PersistentDrawer({super.key, required this.user});
