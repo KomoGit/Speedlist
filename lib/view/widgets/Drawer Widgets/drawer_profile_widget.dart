@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
-import 'package:speedlist/controller/user_controller.dart';
 
 import '../../../model/user.dart';
 import '../../Login/login_view.dart';
@@ -17,18 +15,11 @@ class DrawerProfileWidget extends StatefulWidget {
 
 class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
   late UserModel _user;
-  late String _userProfilePicture = UserUtilities.userProfilePicture;
 
   @override
   void initState() {
     super.initState();
     _user = UserUtilities.user;
-    _getUserProfilePicture();
-  }
-
-  _getUserProfilePicture() async {
-    _userProfilePicture = await UserController.getProfilePictureUrl(
-        BackendUtilities.getBackendAccess(), _user);
   }
 
   @override
@@ -56,7 +47,7 @@ class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
               Flexible(
                 child: CircleAvatar(
                   maxRadius: 50,
-                  backgroundImage: NetworkImage(_userProfilePicture),
+                  backgroundImage: NetworkImage(_user.profilePicture),
                 ),
               ),
               Flexible(

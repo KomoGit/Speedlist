@@ -1,25 +1,29 @@
 import 'package:pocketbase/pocketbase.dart';
+import 'package:speedlist/Utilities/backend_utilities.dart';
+import 'package:speedlist/controller/user_controller.dart';
 
 class UserModel {
   String username;
+  String profilePicture;
   String id;
   String email;
   bool isVerified;
 
-  UserModel(this.username, this.id, this.email, this.isVerified);
+  UserModel(this.username, this.profilePicture,this.id, this.email, this.isVerified);
 
-  static UserModel fromRecord(RecordModel model) {
-    String username = model.getStringValue("username");
-    String id = model.id;
-    String email = model.getStringValue("email");
-    bool isVerified = model.getBoolValue("verified");
+  static Future<UserModel> fromRecord(RecordModel record) async {
+    String username = record.getStringValue("username");
+    String id = record.id;
+    String profilePicture = await UserController.getProfilePictureUrl(BackendUtilities.getBackendAccess(), id);
+    String email = record.getStringValue("email");
+    bool isVerified = record.getBoolValue("verified");
 
-    return UserModel(username, id, email, isVerified);
+    return UserModel(username, profilePicture,id, email, isVerified);
   }
 }
 
 //You might be wondering why am I not using the UserModel itself.
-//Issues arise when we have to confirm user verification and when assinging id.
+//Issues arise when we have to confirm user verification and when assigning id.
 //These things should be done outside of the application (Id Assigned auto and verification done via email confirmation).
 //To make it simpler we use UserRegisterModel.
 class UserRegisterModel {
