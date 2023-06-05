@@ -1,3 +1,5 @@
+import 'package:speedlist/Utilities/user_utilities.dart';
+
 class LoginUtilities {
   bool emailValidator(String email) {
     return RegExp(
@@ -27,4 +29,11 @@ class LoginUtilities {
         .trim();
     return message;
   }
+
+ bool isUserLoggedIn(){
+    if(UserUtilities.user.id == "000"){
+      return false;
+    }
+    return true;
+ }
 }

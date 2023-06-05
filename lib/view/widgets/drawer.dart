@@ -47,7 +47,7 @@ class PersistentDrawer extends StatelessWidget {
               Icons.login_outlined,
               color: Colors.white,
             ),
-            label: const Text("Log Out"),
+            label: Text(!loginUtilities.isUserLoggedIn() ? "Log In" : "Log Out"),
           ),
         ],
       ),
