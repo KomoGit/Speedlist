@@ -171,7 +171,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
                           try {
                             // ignore: unused_local_variable
-                            user = await UserController.authUser(
+                            user = await UserController.auth(
                               BackendUtilities.getBackendAccess(),
                               _emailController.text.trim(),
                               _passController.text.trim(),

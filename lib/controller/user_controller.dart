@@ -6,7 +6,7 @@ import 'package:speedlist/model/user.dart';
 class UserController {
   static final LoginUtilities _loginUtilities = LoginUtilities();
 
-  static Future<UserModel> authUser(
+  static Future<UserModel> auth(
       PocketBase pb, String email, String password) async {
     late RecordAuth authData;
     try {
@@ -20,7 +20,7 @@ class UserController {
     }
   }
 
-  static Future<String> requestUserPasswordReset(
+  static Future<String> requestPasswordReset(
       PocketBase pb, String email) async {
     try {
       await pb.admins
