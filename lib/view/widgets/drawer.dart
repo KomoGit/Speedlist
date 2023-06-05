@@ -44,6 +44,27 @@ class PersistentDrawer extends StatelessWidget {
             ),
             icon: const Icon(
               size: 32,
+              Icons.account_tree,
+              color: Colors.white,
+            ),
+            label: Text(!loginUtilities.isUserLoggedIn() ? "My Posts" : "Log Out"),
+          ),
+          ElevatedButton.icon(
+            onPressed: ()  {
+              Debug.printLog("Items button clicked");
+              // UserUtilities.setUserToDefault();
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const LoginPage(),
+              //   ),
+              // );
+            },
+            style: const ButtonStyle(
+              alignment: Alignment.center,
+            ),
+            icon: const Icon(
+              size: 32,
               Icons.login_outlined,
               color: Colors.white,
             ),
