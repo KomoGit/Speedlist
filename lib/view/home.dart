@@ -5,6 +5,7 @@ import 'package:speedlist/controller/category_controller.dart';
 import 'package:speedlist/model/categories.dart';
 import 'package:speedlist/view/widgets/drawer.dart';
 import 'package:speedlist/view/widgets/category_widget.dart';
+import 'package:speedlist/view/widgets/persistent_app_bar.dart';
 
 import '../debug/print.dart';
 
@@ -34,13 +35,8 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         drawer: PersistentDrawer(
           user: UserUtilities.user,
-        ), //The drawer will be dynamic, it will be filled with items dynamically. Remove const once implemented
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          title: const Text(
-              "Project - Speedlist"), //Make this a constant entity that can be called anywhere in the app.
         ),
+        appBar: const PersistentAppBar(),
         body: FutureBuilder<List<CategoryModel>>(
           future: _categoryData,
           builder: (context, snapshot) {
