@@ -53,7 +53,7 @@ class PersistentDrawer extends StatelessWidget {
               ),
               icon: const Icon(
                 size: 32,
-                Icons.account_tree,
+                Icons.account_tree_outlined,
                 color: Colors.white,
               ),
               label: const Text("My Listings"),
