@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
-import 'package:speedlist/debug/print.dart';
+import 'package:speedlist/view/home.dart';
+import 'package:speedlist/view/user_category_items.dart';
 
 import '../../model/user.dart';
 import '../Login/login_view.dart';
@@ -18,7 +19,14 @@ class PersistentDrawer extends StatelessWidget {
         children: [
           const DrawerProfileWidget(), //When adding a list item, ensure that you have added them on Localization first.
           ElevatedButton.icon(
-            onPressed: () => Debug.printLog("Home Button Clicked"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Home()
+                ),
+              );
+            },
             style: const ButtonStyle(
               alignment: Alignment.center,
             ),
@@ -29,36 +37,36 @@ class PersistentDrawer extends StatelessWidget {
             ),
             label: const Text("Home"),
           ),
+          Visibility(
+            visible: loginUtilities.isUserLoggedIn(),
+            child: ElevatedButton.icon(
+              onPressed: ()  {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserCategoryItems()
+                  ),
+                );
+              },
+              style: const ButtonStyle(
+                alignment: Alignment.center,
+              ),
+              icon: const Icon(
+                size: 32,
+                Icons.account_tree,
+                color: Colors.white,
+              ),
+              label: const Text("My Listings"),
+            ),
+          ),
           ElevatedButton.icon(
             onPressed: ()  {
               UserUtilities.setUserToDefault();
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => const LoginPage(),),
               );
-            },
-            style: const ButtonStyle(
-              alignment: Alignment.center,
-            ),
-            icon: const Icon(
-              size: 32,
-              Icons.account_tree,
-              color: Colors.white,
-            ),
-            label: Text(!loginUtilities.isUserLoggedIn() ? "My Posts" : "Log Out"),
-          ),
-          ElevatedButton.icon(
-            onPressed: ()  {
-              Debug.printLog("Items button clicked");
-              // UserUtilities.setUserToDefault();
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const LoginPage(),
-              //   ),
-              // );
             },
             style: const ButtonStyle(
               alignment: Alignment.center,
