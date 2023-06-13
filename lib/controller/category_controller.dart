@@ -1,4 +1,6 @@
 import 'package:pocketbase/pocketbase.dart';
+import 'package:speedlist/model/category_item.dart';
+import 'package:speedlist/model/user.dart';
 
 import '../model/categories.dart';
 
@@ -18,6 +20,16 @@ class CategoryController {
     for (RecordModel model in rawData) {
       categories.add(CategoryModel.fromModel(model));
     }
+    return categories;
+  }
+  //PERFORMANCE SINK
+  Future<List<CategoryItem>> getUserCategories(PocketBase pb, UserModel user) async {
+    List<RecordModel> rawData = await pb.collection('categoryItem').getFullList();
+    List<CategoryItem> categories = [];
+    for (RecordModel model in rawData){
+      categories.add(CategoryItem.fromModel(model));
+    }
+    if(categories.isEmpty) throw Exception("$user.username has no items.");
     return categories;
   }
 }
