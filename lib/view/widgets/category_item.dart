@@ -30,13 +30,6 @@ class CategoryItemWidget extends StatelessWidget {
             margin: const EdgeInsets.all(10),
             width: 50,
             height: 50,
-            // decoration: BoxDecoration(
-            //   shape: BoxShape.circle,
-            //   image: DecorationImage(
-            //     image: NetworkImage(categoryIcoUrl),
-            //     fit: BoxFit.fill,
-            //   ),
-            // ),
           ),
           const SizedBox(
             width: 10,
