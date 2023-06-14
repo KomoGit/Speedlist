@@ -23,13 +23,24 @@ class CategoryController {
     return categories;
   }
   //PERFORMANCE SINK
-  Future<List<CategoryItem>> getUserCategories(PocketBase pb, UserModel user) async {
+  Future<List<CategoryItem>> getAllCategoryItems(PocketBase pb) async {
     List<RecordModel> rawData = await pb.collection('categoryItem').getFullList();
     List<CategoryItem> categories = [];
     for (RecordModel model in rawData){
       categories.add(CategoryItem.fromModel(model));
     }
-    if(categories.isEmpty) throw Exception("$user.username has no items.");
+    if(categories.isEmpty) throw Exception("No items can be found");
     return categories;
+  }
+  //Possibly the worst thing that was made after nukes and ebola. This thing hurts to look at but I have no other implementation in mind.
+  List<CategoryItem> getAllUserCategories(List<CategoryItem> items, UserModel user) {
+    List<CategoryItem> userItems = [];
+    for (CategoryItem item in items){
+      if(item.parentUser == user.id){
+        userItems.add(item);
+      }
+    }
+    if (userItems.isEmpty) throw Exception("$user.username has no items");
+    return userItems;
   }
 }
