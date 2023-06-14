@@ -51,7 +51,19 @@ class UserController {
     }
     return "Registration successful, confirm your account by checking your email.";
   }
-
+  static Future<UserModel> getUserById(PocketBase pb, String id) async{
+    List<RecordModel> rawData = await pb
+        .collection('categories')
+        .getFullList()
+        .timeout(const Duration(seconds: 10),
+    );
+    for (RecordModel model in rawData) {
+      if(model.id == id){
+        return UserModel.fromRecord(model);
+      }
+    }
+    throw Exception("User with specified ID could not be found");
+  }
   //This is one of those temporary measures. Yes that type......it will stay here for a while.
   static Future<String> getProfilePictureUrl(
       PocketBase pb, id) async {
