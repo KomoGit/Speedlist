@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
+import 'package:speedlist/controller/user_preferences_db_controller.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
@@ -12,7 +13,10 @@ import 'package:speedlist/view/register_view.dart';
 import 'package:speedlist/view/widgets/Login%20Widgets/oauth_login_buttons.dart';
 
 import '../../Utilities/login_utilities.dart';
-
+/// A note about this class. It is one of the biggest views we have inside the project.
+/// Due to time constraints I have trying to get a MVP, I had to forget about security and optimization.
+/// To future developer who might join us, you can start optimization by splitting this view into different components.
+/// Best of luck, taming the beast !
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
@@ -46,7 +50,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
   bool _isEmailEmpty = false;
   bool _isPassEmpty = false;
   bool _isEmailValid = true;
-  bool _rememberMe = false;
 
   @override
   void initState() {
@@ -151,6 +154,21 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         contentPadding: const EdgeInsets.all(20),
                       ),
                     ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Remember me", style: GoogleFonts.montserrat(color: Colors.white, fontSize: 17),),
+                      const Padding(padding: EdgeInsets.only(left: 90)),
+                      Switch(
+                      value: loginUtilities.rememberUserLogin,
+                      activeColor: Colors.lightBlueAccent,
+                      onChanged: (bool value) {
+                        setState(() {
+                          loginUtilities.rememberUserLogin = value;
+                        });
+                      }),
+                    ],
+                  ),
                     ElevatedButton(
                       onPressed: () async {
                         //These two codes are repeated heavily. Find a way to fix it
@@ -171,12 +189,12 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             },
                           ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
                           try {
-                            // ignore: unused_local_variable
                             user = await UserController.auth(
                               BackendUtilities.getBackendAccess(),
                               _emailController.text.trim(),
                               _passController.text.trim(),
                             );
+//                            if (loginUtilities.rememberUserLogin)
                             UserUtilities.user = user;
                             if (mounted) {
                               Navigator.push(
@@ -187,12 +205,12 @@ class _LoginPageInputState extends State<LoginPageInput> {
                               );
                             }
                           } catch (e) {
-                            String errmsg = loginUtilities.formatErrorMessage(
+                            String errorMessage = loginUtilities.formatErrorMessage(
                               e.toString(),
                             );
                             if (mounted) {
                               await loginFailAlert(context,
-                                  "$errmsg. Check your email or password for errors.");
+                                  "$errorMessage. Check your email or password for errors.");
                             }
                           }
                         }
@@ -205,21 +223,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         ),
                       ),
                       child: const Text("Login"),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Remember me", style: TextStyle(fontSize: 12, color: Colors.white),),
-                        Switch(
-                        value: _rememberMe,
-                        activeColor: Colors.lightBlueAccent,
-                        onChanged: (bool value){
-                          setState(() {
-                            _rememberMe = value;
-                          });
-                          }
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -310,7 +313,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
               style: TextStyle(fontSize: 12, color: Colors.white),
             ),
           ),
-
         ],
       ),
     );
