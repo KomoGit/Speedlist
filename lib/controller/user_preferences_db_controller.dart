@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/objectbox.g.dart';
 
@@ -11,7 +14,10 @@ class PreferencesDBController
   }
 
   static Future<PreferencesDBController> init() async {
-    final store = await openStore(); //Tutorial shows that this operation is indeed a future operation. Try removing this once you ensure this code works.
+    Directory dir = await getApplicationDocumentsDirectory();
+    String dirPath = '${dir.path}/speedlist';
+    await Directory(dirPath).create(recursive: true);
+    final store = await openStore(directory: dirPath);//Tutorial shows that this operation is indeed a future operation. Try removing this once you ensure this code works.
     return PreferencesDBController._init(store);
   }
   //CRUD Operations.
