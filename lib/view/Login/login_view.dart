@@ -46,6 +46,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
   bool _isEmailEmpty = false;
   bool _isPassEmpty = false;
   bool _isEmailValid = true;
+  bool _rememberMe = false;
 
   @override
   void initState() {
@@ -205,8 +206,45 @@ class _LoginPageInputState extends State<LoginPageInput> {
                       ),
                       child: const Text("Login"),
                     ),
-
-                    TextButton(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Remember me", style: TextStyle(fontSize: 12, color: Colors.white),),
+                        Switch(
+                        value: _rememberMe,
+                        activeColor: Colors.lightBlueAccent,
+                        onChanged: (bool value){
+                          setState(() {
+                            _rememberMe = value;
+                          });
+                          }
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                OAuthButton(iconAsset: "assets/icons/facebook.png"),
+                SizedBox(
+                  width: 10,
+                ),
+                OAuthButton(iconAsset: "assets/icons/search.png"),
+                SizedBox(
+                  width: 10,
+                ),
+                OAuthButton(iconAsset: "assets/icons/microsoft.png")
+              ],
+            ),
+          ),
+          TextButton(
                       onPressed: () {
                         if (connectivityResult == ConnectivityResult.none) {
                           loginFailAlert(context,
@@ -236,29 +274,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                OAuthButton(iconAsset: "assets/icons/facebook.png"),
-                SizedBox(
-                  width: 10,
-                ),
-                OAuthButton(iconAsset: "assets/icons/search.png"),
-                SizedBox(
-                  width: 10,
-                ),
-                OAuthButton(iconAsset: "assets/icons/microsoft.png")
-              ],
-            ),
-          ),
           TextButton(
             child: const Text(
               "Forgot my password.",
@@ -294,7 +309,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
               "View without logging in",
               style: TextStyle(fontSize: 12, color: Colors.white),
             ),
-          )
+          ),
+
         ],
       ),
     );
