@@ -17,7 +17,7 @@ class PreferencesDBController
     Directory dir = await getApplicationDocumentsDirectory();
     String dirPath = '${dir.path}/speedlist';
     await Directory(dirPath).create(recursive: true);
-    final store = await openStore(directory: dirPath);//Tutorial shows that this operation is indeed a future operation. Try removing this once you ensure this code works.
+    final store = openStore(directory: dirPath);//Tutorial shows that this operation is indeed a future operation. Try removing this once you ensure this code works.
     return PreferencesDBController._init(store);
   }
   //CRUD Operations.
