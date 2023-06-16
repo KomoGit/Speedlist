@@ -35,7 +35,7 @@ class UserController {
   static Future<String> createNewUser(
       PocketBase pb, UserRegisterModel user) async {
     final body = <String, dynamic>{
-      "username": user.username,
+      "username": user.userEmailAddress,
       "email": user.email,
       "emailVisibility": false,
       "password": user.passwords[0],

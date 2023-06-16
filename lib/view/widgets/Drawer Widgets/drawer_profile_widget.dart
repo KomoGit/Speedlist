@@ -48,7 +48,7 @@ class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
                 ),
               ),
               Flexible(
-                child: Text("Hello ${_user.username}"),
+                child: Text("Hello ${_user.userEmailAddress}"),
               ),
             ],
           ),

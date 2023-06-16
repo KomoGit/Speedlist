@@ -205,6 +205,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                       ),
                       child: const Text("Login"),
                     ),
+
                     TextButton(
                       onPressed: () {
                         if (connectivityResult == ConnectivityResult.none) {
