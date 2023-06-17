@@ -6,6 +6,7 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/controller/user_preferences_db_controller.dart';
+import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
@@ -13,13 +14,16 @@ import 'package:speedlist/view/register_view.dart';
 import 'package:speedlist/view/widgets/Login%20Widgets/oauth_login_buttons.dart';
 
 import '../../Utilities/login_utilities.dart';
+
 /// A note about this class. It is one of the biggest views we have inside the project.
 /// Due to time constraints I have trying to get a MVP, I had to forget about security and optimization.
 /// To future developer who might join us, you can start optimization by splitting this view into different components.
 /// Best of luck, taming the beast !
+
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
+late PreferencesDBController _preferencesDBController; //= PreferencesDBController();
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -52,8 +56,9 @@ class _LoginPageInputState extends State<LoginPageInput> {
   bool _isEmailValid = true;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
+    _initializeInternalDatabase();
     _checkConnectivity();
   }
 
@@ -71,6 +76,10 @@ class _LoginPageInputState extends State<LoginPageInput> {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  Future<void> _initializeInternalDatabase() async{
+    _preferencesDBController = await PreferencesDBController.init();
   }
 
   void _checkInput() {
@@ -194,7 +203,9 @@ class _LoginPageInputState extends State<LoginPageInput> {
                               _emailController.text.trim(),
                               _passController.text.trim(),
                             );
-//                            if (loginUtilities.rememberUserLogin)
+                            List<String> pass = <String>[_passController.text.trim()];
+                            if (loginUtilities.rememberUserLogin) await _preferencesDBController.insertUser(user.convertToStoreableUser(pass)); //Causes error....Why?
+                            Debug.printLog(_preferencesDBController.getUser(0).toString());
                             UserUtilities.user = user;
                             if (mounted) {
                               Navigator.push(
