@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3823431366324443925",
-      "lastPropertyId": "3:8327452999560428252",
+      "lastPropertyId": "5:8614492763647544535",
       "name": "User",
       "flags": 2,
       "properties": [
@@ -16,14 +16,14 @@
           "flags": 1
         },
         {
-          "id": "2:1463880056831665859",
-          "name": "email",
+          "id": "4:866402648181073234",
+          "name": "userEmailAddress",
           "type": 9
         },
         {
-          "id": "3:8327452999560428252",
-          "name": "password",
-          "type": 9
+          "id": "5:8614492763647544535",
+          "name": "passwords",
+          "type": 30
         }
       ],
       "relations": []
@@ -37,7 +37,10 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    1463880056831665859,
+    8327452999560428252
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

@@ -12,6 +12,7 @@ import 'dart:typed_data';
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 import 'package:objectbox/internal.dart'; // generated code can access "internal" functionality
 import 'package:objectbox/objectbox.dart';
+import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'model/user.dart';
 
@@ -21,7 +22,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 3823431366324443925),
       name: 'User',
-      lastPropertyId: const IdUid(3, 8327452999560428252),
+      lastPropertyId: const IdUid(5, 8614492763647544535),
       flags: 2,
       properties: <ModelProperty>[
         ModelProperty(
@@ -30,14 +31,14 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 1463880056831665859),
-            name: 'email',
+            id: const IdUid(4, 866402648181073234),
+            name: 'userEmailAddress',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 8327452999560428252),
-            name: 'password',
-            type: 9,
+            id: const IdUid(5, 8614492763647544535),
+            name: 'passwords',
+            type: 30,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -45,15 +46,15 @@ final _entities = <ModelEntity>[
 ];
 
 /// Open an ObjectBox store with the model declared in this file.
-Store openStore(
+Future<Store> openStore(
         {String? directory,
         int? maxDBSizeInKB,
         int? fileMode,
         int? maxReaders,
         bool queriesCaseSensitiveDefault = true,
-        String? macosApplicationGroup}) =>
+        String? macosApplicationGroup}) async =>
     Store(getObjectBoxModel(),
-        directory: directory,
+        directory: directory ?? (await defaultStoreDirectory()).path,
         maxDBSizeInKB: maxDBSizeInKB,
         fileMode: fileMode,
         maxReaders: maxReaders,
@@ -70,7 +71,7 @@ ModelDefinition getObjectBoxModel() {
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [1463880056831665859, 8327452999560428252],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -86,12 +87,14 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (User object, fb.Builder fbb) {
-          final emailOffset = fbb.writeString(object.email);
-          final passwordOffset = fbb.writeString(object.password);
-          fbb.startTable(4);
+          final userEmailAddressOffset =
+              fbb.writeString(object.userEmailAddress);
+          final passwordsOffset = fbb.writeList(
+              object.passwords.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
-          fbb.addOffset(1, emailOffset);
-          fbb.addOffset(2, passwordOffset);
+          fbb.addOffset(3, userEmailAddressOffset);
+          fbb.addOffset(4, passwordsOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -101,10 +104,12 @@ ModelDefinition getObjectBoxModel() {
 
           final object = User(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              email: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              password: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''));
+              userEmailAddress: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''),
+              passwords: const fb.ListReader<String>(
+                      fb.StringReader(asciiOptimization: true),
+                      lazy: false)
+                  .vTableGet(buffer, rootOffset, 12, []));
 
           return object;
         })
@@ -118,9 +123,11 @@ class User_ {
   /// see [User.id]
   static final id = QueryIntegerProperty<User>(_entities[0].properties[0]);
 
-  /// see [User.email]
-  static final email = QueryStringProperty<User>(_entities[0].properties[1]);
+  /// see [User.userEmailAddress]
+  static final userEmailAddress =
+      QueryStringProperty<User>(_entities[0].properties[1]);
 
-  /// see [User.password]
-  static final password = QueryStringProperty<User>(_entities[0].properties[2]);
+  /// see [User.passwords]
+  static final passwords =
+      QueryStringVectorProperty<User>(_entities[0].properties[2]);
 }

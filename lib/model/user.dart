@@ -21,6 +21,10 @@ class UserModel {
 
     return UserModel(username, profilePicture,id, email, isVerified);
   }
+  //This method is made for purposes of storing the user to internal database. Check login_view.dart to see implemented code.
+  User convertToStoreableUser(List<String> password){
+    return User(userEmailAddress: userEmailAddress,passwords: password);
+  }
 }
 
 
@@ -28,26 +32,17 @@ class UserModel {
 //Issues arise when we have to confirm user verification and when assigning id.
 //These things should be done outside of the application (Id Assigned auto and verification done via email confirmation).
 //To make it simpler we use UserRegisterModel.
-
-class UserRegisterModel {
-  String userEmailAddress;
-  String email;
-  List<String> passwords; //Contains both password and confirm password.
-  UserRegisterModel(this.userEmailAddress, this.email, this.passwords);
-}
-
-// This model is used for purposes of saving users info on the app itself.
-// It is a model made only for ObjectBox.
 @Entity()
 @Sync()
-class User{
+class User {
+  @Id()
   int id;
-  String email;
-  String password;
+  String userEmailAddress; //Both email and username are same.
+  List<String> passwords; //Contains both password and confirm password.
+  User({this.id = 0, required this.userEmailAddress, required this.passwords});
 
-  User({
-    this.id = 0 ,
-    required this.email,
-    required this.password}
-      );
+  @override
+  String toString() {
+    return "$userEmailAddress $passwords[0]";
+  }
 }
