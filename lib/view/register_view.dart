@@ -239,11 +239,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                             _passController[0].text,
                             _passController[1].text
                           ];
-                          UserRegisterModel newUser = UserRegisterModel(
-                            _usernameController.text.trim(),
-                            _emailController.text.trim(),
-                            passwords,
-                          );
+                          User newUser = User(userEmailAddress: _usernameController.text.trim(), passwords: passwords);
                           await UserController.createNewUser(
                                   BackendUtilities.getBackendAccess(), newUser)
                               .then(

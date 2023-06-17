@@ -17,11 +17,13 @@ class PreferencesDBController
     Directory dir = await getApplicationDocumentsDirectory();
     String dirPath = '${dir.path}/speedlist';
     await Directory(dirPath).create(recursive: true);
-    final store = openStore(directory: dirPath);
+    final store = await openStore(directory: dirPath);
     return PreferencesDBController._init(store);
   }
+
   //CRUD Operations.
-  int insertUser(User user) => _userBox.put(user);
+  Future<int> insertUser(User user) => _userBox.putAsync(user);
   User? getUser(int id) => _userBox.get(id);
+  List<User> getAllUsers() => _userBox.getAll();
   bool deleteUser(int id) => _userBox.remove(id);
 }
