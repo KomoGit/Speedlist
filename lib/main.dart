@@ -4,11 +4,11 @@ import 'package:speedlist/view/Login/login_view.dart';
 
 import 'controller/user_preferences_db_controller.dart';
 
-late PreferencesDBController internalDBController;
+//late PreferencesDBController internalDBController;
 
-Future main() async {
+main(){//was  Future async
   WidgetsFlutterBinding.ensureInitialized();
-  internalDBController = await PreferencesDBController.init();
+  //internalDBController = await PreferencesDBController.init();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
