@@ -22,8 +22,10 @@ class UserModel {
     return UserModel(username, profilePicture,id, email, isVerified);
   }
   //This method is made for purposes of storing the user to internal database. Check login_view.dart to see implemented code.
-  User convertToStoreableUser(List<String> password){
-    return User(userEmailAddress: userEmailAddress,passwords: password);
+  User convertToStoreableUser(String pass){
+    List<String> password = [];
+    password.add(pass);
+    return User(username: "",userEmailAddress: userEmailAddress,passwords: password);
   }
 }
 
@@ -32,14 +34,17 @@ class UserModel {
 //Issues arise when we have to confirm user verification and when assigning id.
 //These things should be done outside of the application (Id Assigned auto and verification done via email confirmation).
 //To make it simpler we use UserRegisterModel.
+
+// I effed up big time, username is important.
 @Entity()
 @Sync()
 class User {
   @Id()
   int id;
+  String username;
   String userEmailAddress; //Both email and username are same.
   List<String> passwords; //Contains both password and confirm password.
-  User({this.id = 0, required this.userEmailAddress, required this.passwords});
+  User({this.id = 0, required this.username, required this.userEmailAddress, required this.passwords});
 
   @override
   String toString() {
