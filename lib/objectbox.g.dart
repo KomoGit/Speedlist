@@ -22,7 +22,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 3823431366324443925),
       name: 'User',
-      lastPropertyId: const IdUid(5, 8614492763647544535),
+      lastPropertyId: const IdUid(6, 2703308920669830943),
       flags: 2,
       properties: <ModelProperty>[
         ModelProperty(
@@ -39,6 +39,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(5, 8614492763647544535),
             name: 'passwords',
             type: 30,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 2703308920669830943),
+            name: 'username',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -91,10 +96,12 @@ ModelDefinition getObjectBoxModel() {
               fbb.writeString(object.userEmailAddress);
           final passwordsOffset = fbb.writeList(
               object.passwords.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(6);
+          final usernameOffset = fbb.writeString(object.username);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(3, userEmailAddressOffset);
           fbb.addOffset(4, passwordsOffset);
+          fbb.addOffset(5, usernameOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -104,6 +111,8 @@ ModelDefinition getObjectBoxModel() {
 
           final object = User(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              username: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 14, ''),
               userEmailAddress: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 10, ''),
               passwords: const fb.ListReader<String>(
@@ -130,4 +139,7 @@ class User_ {
   /// see [User.passwords]
   static final passwords =
       QueryStringVectorProperty<User>(_entities[0].properties[2]);
+
+  /// see [User.username]
+  static final username = QueryStringProperty<User>(_entities[0].properties[3]);
 }
