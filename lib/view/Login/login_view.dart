@@ -203,9 +203,10 @@ class _LoginPageInputState extends State<LoginPageInput> {
                               _emailController.text.trim(),
                               _passController.text.trim(),
                             );
-                            List<String> pass = <String>[_passController.text.trim()];
-                            if (loginUtilities.rememberUserLogin) await _preferencesDBController.insertUser(user.convertToStoreableUser(pass)); //Causes error....Why?
-                            Debug.printLog(_preferencesDBController.getUser(0).toString());
+                            if (loginUtilities.rememberUserLogin){
+                              await _preferencesDBController.insertUser(user.convertToStoreableUser(_passController.text.trim()));
+                              Debug.printLog(_preferencesDBController.getUser(0).toString()); //Causes error....Why?
+                            }
                             UserUtilities.user = user;
                             if (mounted) {
                               Navigator.push(
