@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
+import 'package:speedlist/controller/user_preferences_db_controller.dart';
+import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/user_category_items.dart';
 
@@ -7,9 +9,12 @@ import '../../model/user.dart';
 import '../Login/login_view.dart';
 import 'Drawer Widgets/drawer_profile_widget.dart';
 
+late PreferencesDBController prefDbCtrl;
+
 class PersistentDrawer extends StatelessWidget {
   final UserModel user;
   const PersistentDrawer({super.key, required this.user});
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class PersistentDrawer extends StatelessWidget {
           ),
           ElevatedButton.icon(
             onPressed: () {
-
+              // Debug.printLog(prefDbCtrl.getAllUsers());
             },
             style: const ButtonStyle(
               alignment: Alignment.center,
