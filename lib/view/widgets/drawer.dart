@@ -37,6 +37,20 @@ class PersistentDrawer extends StatelessWidget {
             ),
             label: const Text("Home"),
           ),
+          ElevatedButton.icon(
+            onPressed: () {
+
+            },
+            style: const ButtonStyle(
+              alignment: Alignment.center,
+            ),
+            icon: const Icon(
+              size: 32,
+              Icons.bug_report_outlined,
+              color: Colors.white,
+            ),
+            label: const Text("Debug Button"),
+          ),
           Visibility(
             visible: loginUtilities.isUserLoggedIn(),
             child: ElevatedButton.icon(
