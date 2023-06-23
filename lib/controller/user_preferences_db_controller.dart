@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/objectbox.g.dart';
 
