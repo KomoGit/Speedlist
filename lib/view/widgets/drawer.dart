@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_preferences_db_controller.dart';
-import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/user_category_items.dart';
 
