@@ -22,7 +22,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 3823431366324443925),
       name: 'User',
-      lastPropertyId: const IdUid(6, 2703308920669830943),
+      lastPropertyId: const IdUid(7, 6152674327555986025),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -44,6 +44,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 2703308920669830943),
             name: 'username',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 6152674327555986025),
+            name: 'rememberLogin',
+            type: 1,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -97,11 +102,12 @@ ModelDefinition getObjectBoxModel() {
           final passwordsOffset = fbb.writeList(
               object.passwords.map(fbb.writeString).toList(growable: false));
           final usernameOffset = fbb.writeString(object.username);
-          fbb.startTable(7);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addOffset(3, userEmailAddressOffset);
           fbb.addOffset(4, passwordsOffset);
           fbb.addOffset(5, usernameOffset);
+          fbb.addBool(6, object.rememberLogin);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -115,6 +121,8 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGet(buffer, rootOffset, 14, ''),
               userEmailAddress: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 10, ''),
+              rememberLogin: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 16, false),
               passwords: const fb.ListReader<String>(
                       fb.StringReader(asciiOptimization: true),
                       lazy: false)
@@ -142,4 +150,8 @@ class User_ {
 
   /// see [User.username]
   static final username = QueryStringProperty<User>(_entities[0].properties[3]);
+
+  /// see [User.rememberLogin]
+  static final rememberLogin =
+      QueryBooleanProperty<User>(_entities[0].properties[4]);
 }
