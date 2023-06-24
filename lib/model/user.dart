@@ -4,13 +4,13 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 
 class UserModel {
-  String userEmailAddress;
+  String username;
   String profilePicture;
   String id;
   String email;
   bool isVerified;
 
-  UserModel(this.userEmailAddress, this.profilePicture,this.id, this.email, this.isVerified);
+  UserModel(this.username, this.profilePicture,this.id, this.email, this.isVerified);
 
   static Future<UserModel> fromRecord(RecordModel record) async {
     String username = record.getStringValue("username");
@@ -22,10 +22,10 @@ class UserModel {
     return UserModel(username, profilePicture,id, email, isVerified);
   }
   //This method is made for purposes of storing the user to internal database. Check login_view.dart to see implemented code.
-  User convertToStoreableUser(String pass){
+  User convertToStoreableUser(String pass,bool rememberUser){
     List<String> password = [];
     password.add(pass);
-    return User(username: "",userEmailAddress: userEmailAddress,passwords: password);
+    return User(username: "",userEmailAddress: email, rememberLogin: rememberUser, passwords: password);
   }
 }
 
@@ -41,9 +41,11 @@ class User {
   int id; // Id you see here != id of UserModel. This id is simply here for internal nosql db.
   String username;
   String userEmailAddress; //Both email and username are same.
+  bool rememberLogin = false;
   List<String> passwords; //Contains both password and confirm password.
-  User({this.id = 0, required this.username, required this.userEmailAddress, required this.passwords});
+  User({this.id = 0, required this.username, required this.userEmailAddress, required this.rememberLogin, required this.passwords});
 
+  //This probably should not be in the production code.
   @override
   String toString() {
     return "$userEmailAddress $passwords[0]";
