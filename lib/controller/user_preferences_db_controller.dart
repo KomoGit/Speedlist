@@ -23,6 +23,7 @@ class PreferencesDBController
 
   //CRUD Operations.
   int? insertUser(User usr) => _userBox.put(usr);
+  int? deleteAll() => _userBox.removeAll();
   User? getUser(int id) => _userBox.get(id);
   List<User> getAllUsers() => _userBox.getAll();
   bool deleteUser(int id) => _userBox.remove(id);
