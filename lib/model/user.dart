@@ -33,14 +33,12 @@ class UserModel {
 //You might be wondering why am I not using the UserModel itself.
 //Issues arise when we have to confirm user verification and when assigning id.
 //These things should be done outside of the application (Id Assigned auto and verification done via email confirmation).
-//To make it simpler we use UserRegisterModel.
+//To make it simpler we use User.
 
-// I effed up big time, username is important.
 @Entity()
-@Sync()
 class User {
   @Id()
-  int id;
+  int id; // Id you see here != id of UserModel. This id is simply here for internal nosql db.
   String username;
   String userEmailAddress; //Both email and username are same.
   List<String> passwords; //Contains both password and confirm password.

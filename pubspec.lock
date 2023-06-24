@@ -532,10 +532,10 @@ packages:
     dependency: "direct main"
     description:
       name: pocketbase
-      sha256: "70b5a2b1eaeca0399023a7c92cefe5971e3b191508984bdb24492b6bdef856aa"
+      sha256: cad5883a52d949c8e719a4f7b03f3ac6bd6107672043a4a2073ccae0689a777b
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.1"
+    version: "0.10.2"
   pool:
     dependency: transitive
     description:
@@ -697,10 +697,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "7dacfda1edcca378031db9905ad7d7bd56b29fd1a90b0908b71a52a12c41e36b"
+      sha256: "1414f27dd781737e51afa9711f2ac2ace6ab4498ee98e20863fa5505aa00c58c"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.4"
   xdg_directories:
     dependency: transitive
     description:

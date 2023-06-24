@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/objectbox.g.dart';
 
@@ -22,7 +23,7 @@ class PreferencesDBController
   }
 
   //CRUD Operations.
-  Future<int> insertUser(User user) => _userBox.putAsync(user);
+  int? insertUser(User usr) => _userBox.put(usr);
   User? getUser(int id) => _userBox.get(id);
   List<User> getAllUsers() => _userBox.getAll();
   bool deleteUser(int id) => _userBox.remove(id);

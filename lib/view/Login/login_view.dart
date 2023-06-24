@@ -6,7 +6,6 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/controller/user_preferences_db_controller.dart';
-import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
@@ -23,7 +22,7 @@ import '../../Utilities/login_utilities.dart';
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
-late PreferencesDBController _preferencesDBController; //= PreferencesDBController();
+late PreferencesDBController _preferencesDBController;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -204,8 +203,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
                               _passController.text.trim(),
                             );
                             if (loginUtilities.rememberUserLogin){
-                              await _preferencesDBController.insertUser(user.convertToStoreableUser(_passController.text.trim()));
-                              Debug.printLog(_preferencesDBController.getUser(0).toString()); //Causes error....Why?
+                              //It only takes in password because it already has access to username.
+                              _preferencesDBController.insertUser(user.convertToStoreableUser(_passController.text.trim()));
                             }
                             UserUtilities.user = user;
                             if (mounted) {
@@ -217,9 +216,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                               );
                             }
                           } catch (e) {
-                            String errorMessage = loginUtilities.formatErrorMessage(
-                              e.toString(),
-                            );
+                            String errorMessage = e.toString();
                             if (mounted) {
                               await loginFailAlert(context,
                                   "$errorMessage. Check your email or password for errors.");
