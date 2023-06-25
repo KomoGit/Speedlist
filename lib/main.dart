@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:speedlist/Utilities/login_utilities.dart';
 import 'package:speedlist/view/Login/login_view.dart';
 
 import 'controller/user_preferences_db_controller.dart';
