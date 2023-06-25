@@ -4,9 +4,10 @@ import 'package:speedlist/view/Login/login_view.dart';
 
 import 'controller/user_preferences_db_controller.dart';
 
+DBAccess dbAccess = DBAccess();
 main(){
   WidgetsFlutterBinding.ensureInitialized();
-  _initInternalDB();
+  //Initialize dbController from DBAccess here.
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
@@ -27,6 +28,3 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<void> _initInternalDB() async{
-  await PreferencesDBController.init();
-}
