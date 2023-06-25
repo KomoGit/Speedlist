@@ -7,6 +7,7 @@ import 'controller/user_preferences_db_controller.dart';
 
 main(){
   WidgetsFlutterBinding.ensureInitialized();
+  _initInternalDB();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
@@ -22,7 +23,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(), //const Home(),
+      home: const LoginPage(),
     );
   }
+}
+
+Future<void> _initInternalDB() async{
+  await PreferencesDBController.init();
 }
