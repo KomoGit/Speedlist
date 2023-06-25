@@ -6,7 +6,6 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/controller/user_preferences_db_controller.dart';
-import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
@@ -23,7 +22,7 @@ import '../../Utilities/login_utilities.dart';
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
-late PreferencesDBController _preferencesDBController;
+//late InternalDBController _preferencesDBController;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -51,7 +50,6 @@ class LoginPageInput extends StatefulWidget {
 //No idea why but without clicking the remember login the app gives error about late User not being initialized. Weird.
 
 class _LoginPageInputState extends State<LoginPageInput> {
-  late UserModel user;
   late dynamic connectivityResult;
   bool _isEmailEmpty = false;
   bool _isPassEmpty = false;
@@ -60,9 +58,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
   @override
   void initState(){
     super.initState();
-    _initializeInternalDatabase();
     _checkConnectivity();
-   // _autoLogin();
+    _autoLogin();
   }
 
   @override
@@ -81,25 +78,18 @@ class _LoginPageInputState extends State<LoginPageInput> {
     }
   }
 
-  Future<void> _initializeInternalDatabase() async{
-    _preferencesDBController = await PreferencesDBController.init();
-  }
-
-  Future<void> _authUser(String usrMail,String pwd) async {
-    try{
-      user = await UserController.auth(
-          BackendUtilities.getBackendAccess(),
-          usrMail,
+  //Although I do not understand what I am doing with this method. I am hoping it will work.
+  Future<UserModel> _authUser(String usrMail,String pwd) async {
+    return await UserController.auth(
+        BackendUtilities.getBackendAccess(),
+        usrMail,
         pwd
-      );
-    }catch(e){
-      loginFailAlert(context, e.toString());
-    }
+    );
   }
 
   //Might move this to login utilities.
   void _autoLogin() { //Non initialized error most likely stems from async.
-    User? storedUser = _preferencesDBController.getUser(0); //From DB.
+    User? storedUser = DBAccess.dbController.getUser(0); //From DB.
     String usrMail = storedUser!.userEmailAddress;
     String pwd = storedUser.passwords[0];
     _authUser(usrMail, pwd);
@@ -221,17 +211,16 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             },
                           ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
                           try {
-                            _authUser(
+                            UserUtilities.user = await _authUser(
                                 _emailController.text.trim(),
                                 _passController.text.trim()
                             );
                             if (loginUtilities.rememberUserLogin){
                               //_preferencesDBController.deleteAll();
-                              //It only takes in password because it already has access to username.
-                              //_preferencesDBController.insertUser(user.convertToStoreableUser(_passController.text.trim(),loginUtilities.rememberUserLogin));
-                              //Debug.printLog(_preferencesDBController.getUser(0));
+                              //_preferencesDBController.insertUser(UserUtilities.user.convertToStoreableUser(_passController.text.trim(),loginUtilities.rememberUserLogin)); //It only takes in password because it already has access to username.
+                              DBAccess.dbController.deleteAll();
+                              DBAccess.dbController.insertUser(UserUtilities.user.convertToStoreableUser(_passController.text.trim(),loginUtilities.rememberUserLogin));
                             }
-                            UserUtilities.user = user;
                             if (mounted) {
                               Navigator.push(
                                 context,
