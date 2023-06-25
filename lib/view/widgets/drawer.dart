@@ -8,7 +8,7 @@ import '../../model/user.dart';
 import '../Login/login_view.dart';
 import 'Drawer Widgets/drawer_profile_widget.dart';
 
-late PreferencesDBController prefDbCtrl;
+late InternalDBController prefDbCtrl;
 
 class PersistentDrawer extends StatelessWidget {
   final UserModel user;
