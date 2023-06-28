@@ -27,9 +27,26 @@ class InternalDBController{
   Future<void> _onCreate(Database db, int version) async{
     await db.execute('''
       CREATE TABLE userInfo(
-        email TEXT,
+        id INTEGER PRIMARY KEY,
+        userEmailAddress TEXT,
         password TEXT
-      )
-    ''');
+      )''');
+  }
+
+  Future<UserForAutoLogin> getUserFromMemory() async{
+    final Database db = await instance.database;
+    var user = await db.query('userInfo');
+    //Add null check here.
+    return UserForAutoLogin.fromMap(user[0]);
+  }
+
+  Future<int> addUserToMemory(UserForAutoLogin usr) async{
+    Database db = await instance.database;
+    return await db.insert('userInfo', usr.toMap());
+  }
+
+  Future<int> removeAllFromMemory() async{
+    Database db = await instance.database;
+    return await db.delete('userInfo');
   }
 }
