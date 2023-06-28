@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
-import 'package:speedlist/controller/user_preferences_db_controller.dart';
+import 'package:speedlist/controller/internal_db_controller.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
@@ -22,7 +22,6 @@ import '../../Utilities/login_utilities.dart';
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
-//late InternalDBController _preferencesDBController;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -89,10 +88,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
 
   //Might move this to login utilities.
   void _autoLogin() { //Non initialized error most likely stems from async.
-    User? storedUser = DBAccess.dbController.getUser(0); //From DB.
-    String usrMail = storedUser!.userEmailAddress;
-    String pwd = storedUser.passwords[0];
-    _authUser(usrMail, pwd);
   }
 
   void _checkInput() {
@@ -216,10 +211,11 @@ class _LoginPageInputState extends State<LoginPageInput> {
                                 _passController.text.trim()
                             );
                             if (loginUtilities.rememberUserLogin){
-                              //_preferencesDBController.deleteAll();
-                              //_preferencesDBController.insertUser(UserUtilities.user.convertToStoreableUser(_passController.text.trim(),loginUtilities.rememberUserLogin)); //It only takes in password because it already has access to username.
-                              DBAccess.dbController.deleteAll();
-                              DBAccess.dbController.insertUser(UserUtilities.user.convertToStoreableUser(_passController.text.trim(),loginUtilities.rememberUserLogin));
+                              InternalDBController.instance.removeAllFromMemory();
+                              InternalDBController.instance.addUserToMemory(
+                                  UserUtilities.user.convertToStoreableUser(_passController.text.trim(),
+                                      loginUtilities.rememberUserLogin)
+                              );
                             }
                             if (mounted) {
                               Navigator.push(
@@ -237,6 +233,10 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             }
                           }
                         }
+                        setState(() {
+                          _passController.clear();
+                          _emailController.clear();
+                        });
                       },
                       style: ButtonStyle(
                         shape: MaterialStatePropertyAll(
