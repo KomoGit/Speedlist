@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
-import 'package:speedlist/controller/user_preferences_db_controller.dart';
 import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/user_category_items.dart';
 
 import '../../model/user.dart';
 import '../Login/login_view.dart';
 import 'Drawer Widgets/drawer_profile_widget.dart';
-
-late InternalDBController prefDbCtrl;
 
 class PersistentDrawer extends StatelessWidget {
   final UserModel user;
