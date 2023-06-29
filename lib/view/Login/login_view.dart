@@ -6,6 +6,7 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/controller/internal_db_controller.dart';
+import 'package:speedlist/debug/print.dart';
 import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
@@ -78,16 +79,22 @@ class _LoginPageInputState extends State<LoginPageInput> {
   }
 
   //Although I do not understand what I am doing with this method. I am hoping it will work.
-  Future<UserModel> _authUser(String usrMail,String pwd) async {
+  Future<UserModel> _authUser(String usrMail,String pass) async {
     return await UserController.auth(
         BackendUtilities.getBackendAccess(),
         usrMail,
-        pwd
+        pass
     );
   }
 
-  //Might move this to login utilities.
-  void _autoLogin() { //Non initialized error most likely stems from async.
+  //Move this to login utilities.
+  void _autoLogin() async {
+    try{
+      UserForAutoLogin usr = await InternalDBController.instance.getUserFromMemory();
+      UserUtilities.user = await _authUser(usr.userEmailAddress,usr.password);
+    }catch(e){
+      Debug.printLog(e);
+    }
   }
 
   void _checkInput() {
@@ -191,7 +198,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         //These two codes are repeated heavily. Find a way to fix it
                         _checkConnectivity();
                         if (connectivityResult == ConnectivityResult.none) {
-                          loginFailAlert(context,
+                          loginAlert(context,
                               "You are not connected to the internet. Turn on mobile network or WiFi");
                           return;
                         }
@@ -200,18 +207,17 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           await BackendUtilities.getBackendStatus().then(
                             (isConnected) {
                               if (!isConnected) {
-                                loginFailAlert(context,
+                                loginAlert(context,
                                     "Connection to server could not be established. Try again later.");
                               }
                             },
-                          ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
+                          );
                           try {
                             UserUtilities.user = await _authUser(
                                 _emailController.text.trim(),
                                 _passController.text.trim()
                             );
                             if (loginUtilities.rememberUserLogin){
-                              InternalDBController.instance.removeAllFromMemory();
                               InternalDBController.instance.addUserToMemory(
                                   UserUtilities.user.convertToStoreableUser(_passController.text.trim(),
                                       loginUtilities.rememberUserLogin)
@@ -228,7 +234,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           } catch (e) {
                             String errorMessage = e.toString();
                             if (mounted) {
-                              await loginFailAlert(context,
+                              await loginAlert(context,
                                   "$errorMessage. Check your email or password for errors.");
                             }
                           }
@@ -273,7 +279,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
           TextButton(
                       onPressed: () {
                         if (connectivityResult == ConnectivityResult.none) {
-                          loginFailAlert(context,
+                          loginAlert(context,
                               "You are not connected to the internet. Turn on mobile network or WiFi");
                           return;
                         }
@@ -311,7 +317,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
             ),
             onPressed: () async {
               if (connectivityResult == ConnectivityResult.none) {
-                loginFailAlert(context,
+                loginAlert(context,
                     "You are not connected to the internet. Turn on mobile network or WiFi");
                 return;
               }
@@ -324,7 +330,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
           TextButton(
             onPressed: () {
               if (connectivityResult == ConnectivityResult.none) {
-                loginFailAlert(context,
+                loginAlert(context,
                     "You are not connected to the internet. Turn on mobile network or WiFi");
                 return;
               }
@@ -342,7 +348,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
   }
 
   //Find a way to ensure we can make this into a reusable widget.
-  Future<dynamic> loginFailAlert(BuildContext context, String msg) =>
+  Future<dynamic> loginAlert(BuildContext context, String msg) =>
       showDialog(
         context: context,
         builder: (BuildContext context) {
