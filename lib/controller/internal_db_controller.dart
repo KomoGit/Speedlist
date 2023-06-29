@@ -26,7 +26,7 @@ class InternalDBController{
 
   Future<void> _onCreate(Database db, int version) async{
     await db.execute('''
-      CREATE TABLE userInfo(
+      CREATE TABLE "userInfo"(
         id INTEGER PRIMARY KEY,
         userEmailAddress TEXT,
         password TEXT
@@ -36,8 +36,10 @@ class InternalDBController{
   Future<UserForAutoLogin> getUserFromMemory() async{
     final Database db = await instance.database;
     var user = await db.query('userInfo');
-    //Add null check here.
-    return UserForAutoLogin.fromMap(user[0]);
+    if(user[0].isNotEmpty){
+      return UserForAutoLogin.fromMap(user[0]);
+    }
+    throw Exception("No users in database.");
   }
 
   Future<int> addUserToMemory(UserForAutoLogin usr) async{
