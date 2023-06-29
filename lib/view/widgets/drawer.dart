@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
+import 'package:speedlist/controller/internal_db_controller.dart';
 import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/user_category_items.dart';
 
@@ -77,6 +78,7 @@ class PersistentDrawer extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: ()  {
               UserUtilities.setUserToDefault();
+              InternalDBController.instance.removeAllFromMemory();
               Navigator.push(
                   context,
                   MaterialPageRoute(
