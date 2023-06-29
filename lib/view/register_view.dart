@@ -243,7 +243,6 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                           User newUser = User(
                               username: _usernameController.text.trim(),
                               userEmailAddress: _emailController.text.trim(),
-                              rememberLogin: false,
                               passwords: passwords);
 
                           await UserController.createNewUser(

@@ -35,9 +35,8 @@ class UserModel {
 class User {
   final String username;
   final String userEmailAddress;
-  late final bool rememberLogin;
   final List<String> passwords; //Contains both password and confirm password.
-  User({required this.username, required this.userEmailAddress, required this.rememberLogin, required this.passwords});
+  User({required this.username, required this.userEmailAddress, required this.passwords});
 
   //This probably should not be in the production code.
   @override
@@ -66,5 +65,10 @@ class UserForAutoLogin {
       'userEmailAddress' :  userEmailAddress,
       'password' : password,
     };
+  }
+
+  @override
+  String toString() {
+    return "$id $userEmailAddress";
   }
 }
