@@ -5,8 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
-import 'package:speedlist/controller/user_preferences_db_controller.dart';
-import 'package:speedlist/model/user.dart';
+import 'package:speedlist/controller/internal_db_controller.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/register_view.dart';
@@ -22,7 +21,6 @@ import '../../Utilities/login_utilities.dart';
 LoginUtilities loginUtilities = LoginUtilities();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passController = TextEditingController();
-late PreferencesDBController _preferencesDBController;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -47,8 +45,9 @@ class LoginPageInput extends StatefulWidget {
   State<LoginPageInput> createState() => _LoginPageInputState();
 }
 
+//No idea why but without clicking the remember login the app gives error about late User not being initialized. Weird.
+
 class _LoginPageInputState extends State<LoginPageInput> {
-  late UserModel user;
   late dynamic connectivityResult;
   bool _isEmailEmpty = false;
   bool _isPassEmpty = false;
@@ -57,16 +56,15 @@ class _LoginPageInputState extends State<LoginPageInput> {
   @override
   void initState(){
     super.initState();
-    _initializeInternalDatabase();
     _checkConnectivity();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passController.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _emailController.dispose();
+  //   _passController.dispose();
+  // }
 
   Future<ConnectivityResult> _checkConnectivity() async {
     try {
@@ -75,10 +73,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
     } catch (e) {
       throw Exception(e);
     }
-  }
-
-  Future<void> _initializeInternalDatabase() async{
-    _preferencesDBController = await PreferencesDBController.init();
   }
 
   void _checkInput() {
@@ -182,7 +176,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         //These two codes are repeated heavily. Find a way to fix it
                         _checkConnectivity();
                         if (connectivityResult == ConnectivityResult.none) {
-                          loginFailAlert(context,
+                          loginAlert(context,
                               "You are not connected to the internet. Turn on mobile network or WiFi");
                           return;
                         }
@@ -191,22 +185,23 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           await BackendUtilities.getBackendStatus().then(
                             (isConnected) {
                               if (!isConnected) {
-                                loginFailAlert(context,
+                                loginAlert(context,
                                     "Connection to server could not be established. Try again later.");
                               }
                             },
-                          ); //Store this inside a global variable that is shared between pages of the application. Use global model and check if user is verified.
+                          );
                           try {
-                            user = await UserController.auth(
-                              BackendUtilities.getBackendAccess(),
-                              _emailController.text.trim(),
-                              _passController.text.trim(),
+                            UserUtilities.user = await UserController.auth(
+                                BackendUtilities.getBackendAccess(),
+                                _emailController.text.trim(),
+                                _passController.text.trim()
                             );
                             if (loginUtilities.rememberUserLogin){
-                              //It only takes in password because it already has access to username.
-                              _preferencesDBController.insertUser(user.convertToStoreableUser(_passController.text.trim()));
+                              InternalDBController.instance.addUserToMemory(
+                                  UserUtilities.user.convertToStoreableUser(_passController.text.trim(),
+                                      loginUtilities.rememberUserLogin)
+                              );
                             }
-                            UserUtilities.user = user;
                             if (mounted) {
                               Navigator.push(
                                 context,
@@ -218,11 +213,15 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           } catch (e) {
                             String errorMessage = e.toString();
                             if (mounted) {
-                              await loginFailAlert(context,
+                              await loginAlert(context,
                                   "$errorMessage. Check your email or password for errors.");
                             }
                           }
                         }
+                        setState(() {
+                          _passController.clear();
+                          _emailController.clear();
+                        });
                       },
                       style: ButtonStyle(
                         shape: MaterialStatePropertyAll(
@@ -259,7 +258,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
           TextButton(
                       onPressed: () {
                         if (connectivityResult == ConnectivityResult.none) {
-                          loginFailAlert(context,
+                          loginAlert(context,
                               "You are not connected to the internet. Turn on mobile network or WiFi");
                           return;
                         }
@@ -297,7 +296,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
             ),
             onPressed: () async {
               if (connectivityResult == ConnectivityResult.none) {
-                loginFailAlert(context,
+                loginAlert(context,
                     "You are not connected to the internet. Turn on mobile network or WiFi");
                 return;
               }
@@ -310,7 +309,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
           TextButton(
             onPressed: () {
               if (connectivityResult == ConnectivityResult.none) {
-                loginFailAlert(context,
+                loginAlert(context,
                     "You are not connected to the internet. Turn on mobile network or WiFi");
                 return;
               }
@@ -328,7 +327,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
   }
 
   //Find a way to ensure we can make this into a reusable widget.
-  Future<dynamic> loginFailAlert(BuildContext context, String msg) =>
+  Future<dynamic> loginAlert(BuildContext context, String msg) =>
       showDialog(
         context: context,
         builder: (BuildContext context) {

@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:speedlist/view/Login/login_view.dart';
+import 'package:speedlist/view/splash_screen.dart';
 
-import 'controller/user_preferences_db_controller.dart';
+import 'Utilities/backend_utilities.dart';
+import 'Utilities/user_utilities.dart';
+import 'controller/internal_db_controller.dart';
+import 'controller/user_controller.dart';
+import 'debug/print.dart';
+import 'model/user.dart';
 
-//late PreferencesDBController internalDBController;
-
-main(){//was  Future async
+main(){
   WidgetsFlutterBinding.ensureInitialized();
-  //internalDBController = await PreferencesDBController.init();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  _autoLogin();
   runApp(const MyApp());
+}
+
+void _autoLogin() async {
+  try{
+    UserForAutoLogin usr = await InternalDBController.instance.getUserFromMemory();
+    UserUtilities.user = await UserController.auth(BackendUtilities.getBackendAccess(),usr.userEmailAddress,usr.password);
+  }catch(e){
+    Debug.printLog(e);
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -20,11 +32,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Project - Speedlist',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(), //const Home(),
+      home: const Splash(),
     );
   }
 }
