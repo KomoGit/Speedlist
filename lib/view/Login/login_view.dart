@@ -6,8 +6,6 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 import 'package:speedlist/controller/internal_db_controller.dart';
-import 'package:speedlist/debug/print.dart';
-import 'package:speedlist/model/user.dart';
 import 'package:speedlist/view/Login/login_forgot_password.dart';
 import 'package:speedlist/view/home.dart';
 import 'package:speedlist/view/register_view.dart';
@@ -59,15 +57,14 @@ class _LoginPageInputState extends State<LoginPageInput> {
   void initState(){
     super.initState();
     _checkConnectivity();
-    _autoLogin();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passController.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _emailController.dispose();
+  //   _passController.dispose();
+  // }
 
   Future<ConnectivityResult> _checkConnectivity() async {
     try {
@@ -75,25 +72,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
       return connectivityResult;
     } catch (e) {
       throw Exception(e);
-    }
-  }
-
-  //Although I do not understand what I am doing with this method. I am hoping it will work.
-  Future<UserModel> _authUser(String usrMail,String pass) async {
-    return await UserController.auth(
-        BackendUtilities.getBackendAccess(),
-        usrMail,
-        pass
-    );
-  }
-
-  //Move this to login utilities.
-  void _autoLogin() async {
-    try{
-      UserForAutoLogin usr = await InternalDBController.instance.getUserFromMemory();
-      UserUtilities.user = await _authUser(usr.userEmailAddress,usr.password);
-    }catch(e){
-      Debug.printLog(e);
     }
   }
 
@@ -213,7 +191,8 @@ class _LoginPageInputState extends State<LoginPageInput> {
                             },
                           );
                           try {
-                            UserUtilities.user = await _authUser(
+                            UserUtilities.user = await UserController.auth(
+                                BackendUtilities.getBackendAccess(),
                                 _emailController.text.trim(),
                                 _passController.text.trim()
                             );

@@ -3,9 +3,9 @@ import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 
 class UserModel {
+  final String id;
   final String username;
   final String profilePicture;
-  final String id;
   final String email;
   bool isVerified;
 
