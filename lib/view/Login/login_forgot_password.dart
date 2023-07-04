@@ -128,7 +128,6 @@ class _ForgotPasswordInputState extends State<ForgotPasswordInput> {
                                     "Connection to server could not be established. Try again later.");
                               } else {
                                 UserController.requestPasswordReset(
-                                    BackendUtilities.getBackendAccess(),
                                     _emailController.text);
                               }
                             },

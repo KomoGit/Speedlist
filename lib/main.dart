@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:speedlist/view/splash_screen.dart';
 
-import 'Utilities/backend_utilities.dart';
 import 'Utilities/user_utilities.dart';
 import 'controller/internal_db_controller.dart';
 import 'controller/user_controller.dart';
@@ -19,7 +18,7 @@ main(){
 void _autoLogin() async {
   try{
     UserForAutoLogin usr = await InternalDBController.instance.getUserFromMemory();
-    UserUtilities.user = await UserController.auth(BackendUtilities.getBackendAccess(),usr.userEmailAddress,usr.password);
+    UserUtilities.user = await UserController.auth(usr.userEmailAddress,usr.password);
   }catch(e){
     Debug.printLog(e);
   }

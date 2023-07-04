@@ -192,7 +192,6 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           );
                           try {
                             UserUtilities.user = await UserController.auth(
-                                BackendUtilities.getBackendAccess(),
                                 _emailController.text.trim(),
                                 _passController.text.trim()
                             );

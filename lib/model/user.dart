@@ -1,5 +1,4 @@
 import 'package:pocketbase/pocketbase.dart';
-import 'package:speedlist/Utilities/backend_utilities.dart';
 import 'package:speedlist/controller/user_controller.dart';
 
 class UserModel {
@@ -14,7 +13,7 @@ class UserModel {
   static Future<UserModel> fromRecord(RecordModel record) async {
     String username = record.getStringValue("username");
     String id = record.id;
-    String profilePicture = await UserController.getProfilePictureUrl(BackendUtilities.getBackendAccess(), id);
+    String profilePicture = await UserController.getProfilePictureUrl(id);
     String email = record.getStringValue("email");
     bool isVerified = record.getBoolValue("verified");
 
@@ -45,7 +44,6 @@ class User {
   }
 }
 
-//Split the AutoLoginModel again.
 class UserForAutoLogin {
   final int? id;
   final String userEmailAddress;
