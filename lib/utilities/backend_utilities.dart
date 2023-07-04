@@ -7,11 +7,7 @@ class BackendUtilities {
     try {
       final response =
           await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.statusCode == 200 ? true : false;
     } catch (e) {
       return false;
     }

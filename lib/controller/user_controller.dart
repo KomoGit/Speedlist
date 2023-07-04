@@ -57,11 +57,9 @@ class UserController {
         .timeout(const Duration(seconds: 10),
     );
     for (RecordModel model in rawData) {
-      if(model.id == id){
-        return UserModel.fromRecord(model);
-      }
+      if(model.id == id) return UserModel.fromRecord(model);
     }
-    throw Exception("User with specified ID could not be found");
+    throw Exception("User with specified ID could not be found"); //Might cause exception even after sending out.
   }
 
   //This is one of those temporary measures. Yes that type......it will stay here for a while.
