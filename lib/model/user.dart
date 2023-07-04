@@ -19,6 +19,7 @@ class UserModel {
 
     return UserModel(username, profilePicture,id, email, isVerified);
   }
+
   //This method is made for purposes of storing the user to internal database. Check login_view.dart to see implemented code.
   UserForAutoLogin convertToStoreableUser(String pass,bool rememberUser){
     return UserForAutoLogin(userEmailAddress: email, password: pass);
