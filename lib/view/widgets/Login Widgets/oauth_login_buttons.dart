@@ -6,9 +6,9 @@ import '../../../debug/print.dart';
 //oAuthWidget needs to be added.
 class OAuthButton extends StatelessWidget {
   final String iconAsset;
-  //final Widget oAuthWidget;
+  final String placeholderText;
   const OAuthButton(
-      {/*required this.oAuthWidget,*/ required this.iconAsset, super.key});
+      {required this.placeholderText, required this.iconAsset, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,10 @@ class OAuthButton extends StatelessWidget {
         child: BlurryContainer.square(
             blur: 5,
             child: GestureDetector(
-                onTap: () => Debug.printLog("Google Login"),
-                child: Image.asset(iconAsset))));
+                onTap: () => Debug.printLog(placeholderText),
+                child: Image.asset(iconAsset)
+            )
+        )
+    );
   }
 }

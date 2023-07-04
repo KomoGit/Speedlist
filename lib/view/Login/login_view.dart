@@ -59,12 +59,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
     _checkConnectivity();
   }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _emailController.dispose();
-  //   _passController.dispose();
-  // }
+  //Had dispose() here but it caused issues.
 
   Future<ConnectivityResult> _checkConnectivity() async {
     try {
@@ -242,15 +237,15 @@ class _LoginPageInputState extends State<LoginPageInput> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                OAuthButton(iconAsset: "assets/icons/facebook.png"),
+                OAuthButton(placeholderText: "Facebook",iconAsset: "assets/icons/facebook.png"),
                 SizedBox(
                   width: 10,
                 ),
-                OAuthButton(iconAsset: "assets/icons/search.png"),
+                OAuthButton(placeholderText: "Google",iconAsset: "assets/icons/search.png"),
                 SizedBox(
                   width: 10,
                 ),
-                OAuthButton(iconAsset: "assets/icons/microsoft.png")
+                OAuthButton(placeholderText: "Microsoft",iconAsset: "assets/icons/microsoft.png")
               ],
             ),
           ),
