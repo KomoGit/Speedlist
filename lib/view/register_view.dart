@@ -245,8 +245,7 @@ class _RegisterPageInputState extends State<RegisterPageInput> {
                               userEmailAddress: _emailController.text.trim(),
                               passwords: passwords);
 
-                          await UserController.createNewUser(
-                                  BackendUtilities.getBackendAccess(), newUser)
+                          await UserController.createNewUser(newUser)
                               .then(
                             (String res) {
                               loginFailAlert(context, res);
