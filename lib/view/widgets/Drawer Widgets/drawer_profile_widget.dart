@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speedlist/Utilities/user_utilities.dart';
 import 'package:speedlist/debug/print.dart';
+import 'package:speedlist/view/widgets/settings.dart';
 
 import '../../../model/user.dart';
 
@@ -34,6 +35,12 @@ class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
       child: InkWell(
         //This should direct us to profile settings
         onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Settings()
+            ),
+          );
           Debug.printLog("Directing to Settings");
         },
         child: Padding(
