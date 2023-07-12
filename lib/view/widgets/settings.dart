@@ -17,6 +17,7 @@ class Settings extends StatelessWidget {
         children: [
           BlurryContainer.square(
           blur: 5,
+          color: Colors.black,
           child: SizedBox(
             width: 350,
             height: 350,
