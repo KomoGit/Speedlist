@@ -15,12 +15,11 @@ class DrawerProfileWidget extends StatefulWidget {
 }
 
 class _DrawerProfileWidgetState extends State<DrawerProfileWidget> {
-  late UserModel _user;
+  final UserModel _user = UserUtilities.user;
 
   @override
   void initState() {
     super.initState();
-    _user = UserUtilities.user;
   }
 
   @override
