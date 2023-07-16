@@ -1,8 +1,11 @@
-import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:speedlist/debug/print.dart';
 
+import '../../Utilities/user_utilities.dart';
+import '../../model/user.dart';
+
+final UserModel _user = UserUtilities.user;
 class Settings extends StatelessWidget {
   const Settings({super.key});
 
@@ -15,14 +18,13 @@ class Settings extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          BlurryContainer.square(
-            blur: 5,
-            child: SizedBox(
+            SizedBox(
               width: 400,
               height: 400,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const Divider(thickness: 1),
                   Row(
                     children: [
                       TextButton(
@@ -31,7 +33,7 @@ class Settings extends StatelessWidget {
                         child: Text(
                           "PROFILE",
                           style: GoogleFonts.bebasNeue(
-                              color: Colors.grey, fontSize: 20),
+                              color: Colors.grey[800], fontSize: 20),
                         ),
                       ),
                       const SizedBox(
@@ -41,12 +43,23 @@ class Settings extends StatelessWidget {
                         Icons.arrow_forward_ios,
                         color: Colors.grey,
                       ),
-                      const Divider(color: Colors.grey,thickness: 10,height: 10),
                     ],
-                  )
+                  ),
+                  const Divider(thickness: 1),
                 ],
               ),
             ),
+          SizedBox(
+            width: 100,
+            height: 100,
+            child: Row(
+              children: [
+                CircleAvatar(
+                  maxRadius: 40,
+                  backgroundImage: NetworkImage(_user.profilePicture),
+                ),
+              ],
+            )
           )
         ],
       ),
