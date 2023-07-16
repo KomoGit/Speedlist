@@ -54,7 +54,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
   bool _isEmailValid = true;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _checkConnectivity();
   }
@@ -151,21 +151,25 @@ class _LoginPageInputState extends State<LoginPageInput> {
                         contentPadding: const EdgeInsets.all(20),
                       ),
                     ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Remember me", style: GoogleFonts.montserrat(color: Colors.white, fontSize: 17),),
-                      const Padding(padding: EdgeInsets.only(left: 90)),
-                      Switch(
-                      value: loginUtilities.rememberUserLogin,
-                      activeColor: Colors.lightBlueAccent,
-                      onChanged: (bool value) {
-                        setState(() {
-                          loginUtilities.rememberUserLogin = value;
-                        });
-                      }),
-                    ],
-                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Remember me",
+                          style: GoogleFonts.montserrat(
+                              color: Colors.white, fontSize: 17),
+                        ),
+                        const Padding(padding: EdgeInsets.only(left: 90)),
+                        Switch(
+                            value: loginUtilities.rememberUserLogin,
+                            activeColor: Colors.lightBlueAccent,
+                            onChanged: (bool value) {
+                              setState(() {
+                                loginUtilities.rememberUserLogin = value;
+                              });
+                            }),
+                      ],
+                    ),
                     ElevatedButton(
                       onPressed: () async {
                         //These two codes are repeated heavily. Find a way to fix it
@@ -188,13 +192,12 @@ class _LoginPageInputState extends State<LoginPageInput> {
                           try {
                             UserUtilities.user = await UserController.auth(
                                 _emailController.text.trim(),
-                                _passController.text.trim()
-                            );
-                            if (loginUtilities.rememberUserLogin){
+                                _passController.text.trim());
+                            if (loginUtilities.rememberUserLogin) {
                               InternalDBController.instance.addUserToMemory(
-                                  UserUtilities.user.convertToStoreableUser(_passController.text.trim(),
-                                      loginUtilities.rememberUserLogin)
-                              );
+                                  UserUtilities.user.convertToStoreableUser(
+                                      _passController.text.trim(),
+                                      loginUtilities.rememberUserLogin));
                             }
                             if (mounted) {
                               Navigator.push(
@@ -237,48 +240,54 @@ class _LoginPageInputState extends State<LoginPageInput> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                OAuthButton(placeholderText: "Facebook",iconAsset: "assets/icons/facebook.png"),
+                OAuthButton(
+                    placeholderText: "Facebook",
+                    iconAsset: "assets/icons/facebook.png"),
                 SizedBox(
                   width: 10,
                 ),
-                OAuthButton(placeholderText: "Google",iconAsset: "assets/icons/search.png"),
+                OAuthButton(
+                    placeholderText: "Google",
+                    iconAsset: "assets/icons/search.png"),
                 SizedBox(
                   width: 10,
                 ),
-                OAuthButton(placeholderText: "Microsoft",iconAsset: "assets/icons/microsoft.png")
+                OAuthButton(
+                    placeholderText: "Microsoft",
+                    iconAsset: "assets/icons/microsoft.png")
               ],
             ),
           ),
           TextButton(
-                      onPressed: () {
-                        if (connectivityResult == ConnectivityResult.none) {
-                          loginAlert(context,
-                              "You are not connected to the internet. Turn on mobile network or WiFi");
-                          return;
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Register(),
-                          ),
-                        );
-                      },
-                      child: const Text.rich(
-                        TextSpan(
-                          text: "Not a member? ",
-                          style: TextStyle(fontSize: 12, color: Colors.white),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "Register.",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+            onPressed: () {
+              if (connectivityResult == ConnectivityResult.none) {
+                loginAlert(context,
+                    "You are not connected to the internet. Turn on mobile network or WiFi");
+                return;
+              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Register(),
+                ),
+              );
+            },
+            child: const Text.rich(
+              TextSpan(
+                text: "Not a member? ",
+                style: TextStyle(fontSize: 12, color: Colors.white),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: "Register.",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           TextButton(
             child: const Text(
               "Forgot my password.",
@@ -321,8 +330,7 @@ class _LoginPageInputState extends State<LoginPageInput> {
   }
 
   //Find a way to ensure we can make this into a reusable widget.
-  Future<dynamic> loginAlert(BuildContext context, String msg) =>
-      showDialog(
+  Future<dynamic> loginAlert(BuildContext context, String msg) => showDialog(
         context: context,
         builder: (BuildContext context) {
           return BlurryContainer.square(
@@ -344,4 +352,4 @@ class _LoginPageInputState extends State<LoginPageInput> {
           );
         },
       );
-  }
+}
