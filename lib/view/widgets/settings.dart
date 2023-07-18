@@ -22,7 +22,7 @@ class Settings extends StatelessWidget {
               width: 400,
               height: 400,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                //mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Divider(thickness: 1),
                   Row(
@@ -57,6 +57,7 @@ class Settings extends StatelessWidget {
                 CircleAvatar(
                   maxRadius: 40,
                   backgroundImage: NetworkImage(_user.profilePicture),
+
                 ),
               ],
             )
